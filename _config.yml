@@ -8,14 +8,12 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Jekyll Bootstrap
+title : 我织梦
 tagline: Site Tagline
 author :
-  name : Name Lastname
-  email : blah@email.test
-  github : username
-  twitter : username
-  feedburner : feedname
+  name : dongguoshuang
+  email : java.c.erlang.go@gmail.com
+  github : codingtiger
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
@@ -120,7 +118,7 @@ JB :
   # Settings for all other include helpers can be defined by creating 
   # a hash with key named for the given helper. ex:
   #
-  #   pages_list :
+  #   aaa :
   #     provider : "custom"   
   #
   # Setting any helper's provider to 'custom' will bypass the helper code
