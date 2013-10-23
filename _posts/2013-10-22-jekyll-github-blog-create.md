@@ -66,7 +66,7 @@ Jekyll-Bootstrap搭建博客：
 
 *   域名绑定
 
-    > 上传成功之后，等10分钟左右，就可以使用http://codingtiger.github.io/进行访问。如果不想使用这个域名，可以在工程根目录下面创建CNAME文件，写入绑定域名，例如www.wozhimeng.com。
+    > 上传成功之后，等10分钟左右，就可以使用http://codingtiger.github.io进行访问。如果不想使用这个域名，可以在工程根目录下面创建CNAME文件，写入绑定域名，例如www.wozhimeng.com。
     
 本文内容叙述尚不够详尽，会持续更新。
 
