@@ -47,14 +47,14 @@ Jekyll-Bootstrap搭建博客：
         cd codingtiger.github.com
         git remote set-url origin git@github.com:codingtiger/codingtiger.github.com.git
         git push origin master
-    安装的过程中可以通过本机安装的Windows Git客户端操作，也可以通过GitHub for Windows操作。
+    安装的过程中可以通过本机安装的Windows Git客户端操作，也可以通过GitHub for Windows操作
 *   发布
-    > 可以通过[GitHub for Windows](http://github-windows.s3.amazonaws.com/GitHubSetup.exe)进行发布操作。也可以使用以下Git命令发布。
+    > 可以通过[GitHub for Windows](http://github-windows.s3.amazonaws.com/GitHubSetup.exe)进行发布操作。也可以使用以下Git命令发布
         git add .
         git commit -m "注释内容"
         git push origin master
 *   域名绑定
-    > 上传成功之后，等10分钟左右，就可以使用[codingtiger.github.io](http://codingtiger.github.io/)进行访问。如果不想使用这个域名，可以在工程根目录下面创建CNAME文件，写入绑定域名，例如www.wozhimeng.com。
+    > 上传成功之后，等10分钟左右，就可以使用[codingtiger.github.io](http://codingtiger.github.io/)进行访问。如果不想使用这个域名，可以在工程根目录下面创建CNAME文件，写入绑定域名，例如www.wozhimeng.com
 
 本文内容叙述尚不够详尽，会持续更新。
 
