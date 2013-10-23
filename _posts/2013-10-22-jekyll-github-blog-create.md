@@ -19,14 +19,14 @@ Jekyll安装：
 
     > 在 Windows 平台下安装 Ruby 可以使用 RubyInstaller。本次安装使用[rubyinstaller-1.9.3-p448.exe](http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-1.9.3-p448.exe?direct)软件包；安装完成之后还要安装DEVELOPMENT KIT（基于MSYS/MinGW的工具使你能够构建许多原生的C/C++扩展为Ruby），对应的软件包为[DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe](https://github.com/downloads/oneclick/rubyinstaller/DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe)。安装步骤如下：
 
-        ```cd D:\ruby\DevKit-tdm
+        cd D:\ruby\DevKit-tdm
         #解压DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe的路径为D:\ruby\DevKit-tdm
         ruby dk.rb init
         #生成config.yml，这里会检查将要添加DevKit支持的Ruby列表，只支持通过RubyInstaller安装的Ruby
         #如果这里列出的Ruby与你的要求不符，可以手动修改
         ruby dk.rb review  
         #检查要添加DevKit支持的Ruby列表是否有误
-        ruby dk.rb install```
+        ruby dk.rb install
 
 *   RubyGems（Ruby程序包管理器）：
     
@@ -34,11 +34,11 @@ Jekyll安装：
 
 *   Jekyll：
 
-        ```~ $ gem install jekyll
+        ~ $ gem install jekyll
         ~ $ jekyll new myblog
         ~ $ cd myblog
         ~/myblog $ jekyll server
-        # => 浏览器打开 http://localhost:4000```
+        # => 浏览器打开 http://localhost:4000
 
 ### Jekyll-Bootstrap
 
@@ -48,20 +48,21 @@ Jekyll-Bootstrap搭建博客：
 
 *   安装Jekyll-Bootstrap
         
-        ```git clone https://github.com/plusjade/jekyll-bootstrap.git codingtiger.github.com
+        git clone https://github.com/plusjade/jekyll-bootstrap.git codingtiger.github.com
         #克隆jekyll-bootstrap代码到本地
         cd codingtiger.github.com
         git remote set-url origin git@github.com:codingtiger/codingtiger.github.com.git
         git push origin master
-        #安装的过程中可以通过本机安装的Windows Git 客户端操作，也可以通过GitHub for Windows操作。```
+
+    安装的过程中可以通过本机安装的Windows Git客户端操作，也可以通过GitHub for Windows操作。
 
 *   发布
     
     > 可以通过[GitHub for Windows](http://github-windows.s3.amazonaws.com/GitHubSetup.exe)进行发布操作。也可以使用以下Git命令发布。
 
-        ```git add .
+        git add .
         git commit -m "注释内容"
-        git push origin master```
+        git push origin master
 
 *   域名绑定
 
