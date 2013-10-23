@@ -58,20 +58,13 @@ Jekyll-Bootstrap搭建博客：
 *   创建文章
     
     > rake post会自动在_posts文件夹下面创建Markdown文件，编辑文件即可。Markdown文件可以使用Sublime Text 2的Markdown插件MarkdownEditing来编辑。
-
         ```rake post title="Hello World"
         Creating new post: ./_posts/2013-10-23-hello-world.md```
-
     > 创建完成通过安装在本地的Jekyll就可以进行调试。**本地调试过程如果出现以下问题：error: invalid byte sequence in GBK.可以找到ruby安装目录下convertible.rb，修改**
-
         ```self.content = File.read(File.join(base, name))```
-
     > 为
-
         ```self.content = File.read(File.join(base, name), :encoding => "utf-8")```
-
     > 如果还出现这个问题，可以在当前命令行窗口执行以下命令，需要每次打开命令行窗口都执行：
-
         ```chcp 65001```
 
 *   发布
