@@ -47,7 +47,7 @@ Jekyll-Bootstrap搭建博客：
         cd codingtiger.github.com
         git remote set-url origin git@github.com:codingtiger/codingtiger.github.com.git
         git push origin master
-    安装的过程中可以通过本机安装的Windows Git客户端操作，也可以通过GitHub for Windows操作。
+    > 安装的过程中可以通过本机安装的Windows Git客户端操作，也可以通过GitHub for Windows操作。
 3.  发布
     > 可以通过[GitHub for Windows](http://github-windows.s3.amazonaws.com/GitHubSetup.exe)进行发布操作。也可以使用以下Git命令发布。
         git add .
