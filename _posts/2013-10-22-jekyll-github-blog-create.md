@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: post
 title: GitHub上使用jekyll bootstrap搭建博客
 category: ruby
 tags: [jekyll,bootstrap,博客,GitHub]
