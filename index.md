@@ -25,5 +25,3 @@ title: 首页
         {% endfor %}
     </ul>
 </div>
-
-{% include JB/uyan_newcmt_unit %}
