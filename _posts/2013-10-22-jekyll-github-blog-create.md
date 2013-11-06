@@ -2,7 +2,7 @@
 layout: post
 title: GitHub上使用jekyll bootstrap搭建博客
 category: ruby
-tags: [jekyll,bootstrap,博客,GitHub]
+tags: [jekyll,bootstrap,搭建博客,GitHub]
 ---
 
 GitHub是一个用于使用Git版本控制系统项目的共享虚拟主机服务。它由GitHub公司（曾称Logical Awesome）的开发者Chris Wanstrath、PJ Hyett和Tom Preston-Werner使用Ruby on Rails编写而成。GitHub设计了Pages功能，允许用户自定义项目首页。
