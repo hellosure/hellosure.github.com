@@ -67,7 +67,8 @@ Jekyll-Bootstrap是基于Jekyll和前端CSS/HTML框架Bootstrap的博客系统�
 > 如果还出现这个问题，可以在当前命令行窗口执行以下命令，需要每次打开命令行窗口都执行：
 
         {% highlight bash %}
-        chcp 65001{% endhighlight %}
+        chcp 65001
+        #DOS命令chcp显示或设置活动代码页（字符集编码）编号，65001对应UTF-8{% endhighlight %}
 
 ##### 3. 发布
 > 可以通过[GitHub for Windows](http://github-windows.s3.amazonaws.com/GitHubSetup.exe)进行发布操作。也可以使用以下Git命令发布。
@@ -77,7 +78,5 @@ Jekyll-Bootstrap是基于Jekyll和前端CSS/HTML框架Bootstrap的博客系统�
         git push origin master{% endhighlight %}
 ##### 4. 域名绑定
 > 上传成功之后，等10分钟左右，就可以使用[codingtiger.github.io](http://codingtiger.github.io/)进行访问。如果不想使用这个域名，可以在工程根目录下面创建CNAME文件，写入绑定域名，例如www.wozhimeng.com。
-
-本文内容叙述尚不够详尽，会持续更新。
 
 -EOF-
