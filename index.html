@@ -14,9 +14,11 @@ title: HelloSure
     {% for tag in site.tags %}
     <li>
       {% if tag[1].size == 1 %}
-      <a style="color:#ff0000" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      <a style="color:#38B738" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elseif tag[1].size == 2 %}
+      <a style="color:#0066FF" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% else %}
-      <a style="color:#000fff" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      <a style="color:#FFCC00" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
     </li>
     {% endfor %}
