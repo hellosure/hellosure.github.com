@@ -14,17 +14,27 @@ title: HelloSure
     {% for tag in site.tags %}
     <li>
       {% if tag[1].size == 1 %}
-      <a style="color:#38B738" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elseif tag[1].size == 2 %}
-      <a style="color:#0066FF" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elseif tag[1].size == 3 %}
-      <a style="color:#9900CC" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elseif tag[1].size == 4 %}
-      <a style="color:#FF6666" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elseif tag[1].size == 5 %}
-      <a style="color:#6666FF" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% else %}
-      <a style="color:#FFCC00" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      <a style="color: #38B738; font-family: Georgia,sans-serif; font-size: 11px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% endif %}
+      
+      {% if tag[1].size == 2 %}
+      <a style="color:#0066FF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 18px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% endif %}
+      
+      {% if tag[1].size == 3 %}
+      <a style="color: #9900CC; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 25px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% endif %}
+      
+      {% if tag[1].size == 4 %}
+      <a style="color: #FF6666; font-family: Verdana,sans-serif; font-size: 32px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% endif %}
+      
+      {% if tag[1].size == 5 %}
+      <a style="color: #6666FF; font-family: 'Arial Black',sans-serif; font-size: 40px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% endif %}
+      
+      {% if tag[1].size > 5 %}
+      <a style="color: #FFCC00; font-family: Impact,sans-serif; font-size: 56px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
     </li>
     {% endfor %}
