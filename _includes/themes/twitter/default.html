@@ -68,19 +68,19 @@
     
     
     
-     function changeTagColor(size){
+     function getTagColor(size){
         if(size==1){
-          document.getElementById('eachTag').style.color="#38B738";
+          return "#38B738";
         }else if(size==2){
-          document.getElementById('eachTag').style.color="#0066FF";
+          return "#0066FF";
         }else if(size==3){
-          document.getElementById('eachTag').style.color="#9900CC";
+          return "#9900CC";
         }else if(size==4){
-          document.getElementById('eachTag').style.color="#FF6666";
+          return "#FF6666";
         }else if(size==5){
-          document.getElementById('eachTag').style.color="#6666FF";
-        }else if(size>5){
-          document.getElementById('eachTag').style.color="#FFCC00";
+          return "#6666FF";
+        }else{
+          return "#FFCC00";
         }
       }
       
