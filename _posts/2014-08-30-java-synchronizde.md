@@ -2,23 +2,23 @@
 layout: post
 title: Java多线程之由synchronized说开去
 category: Java
-tags: [Java,多线程]
+tags: [Java,多线程,同步,synchronized,JMM,ThreadLocal,ReentrantLock]
 ---
 
 迁移自[Java多线程总结之由synchronized说开去](http://hellosure.iteye.com/blog/1121157)
 
 ### 题纲：
 
-+ synchronized与wait()/notify()
++ synchronized与wait/notify
 + JMM与synchronized
 + ThreadLocal与synchronized
 + ReentrantLock与synchronized
 
-### synchronized与wait()/notify()：
+### synchronized与wait/notify：
 
 #### synchronized
 
-**synchronized是针对对象的隐式锁使用的，注意是对象！ **
+synchronized是针对对象的隐式锁使用的，注意是对象！ 
 
 {% highlight java %}
 Class MyClass(){ 
@@ -33,9 +33,9 @@ public static void main(){
 }  
 {% endhighlight %}
 
-线程想要执行myClass.myFunction(); 就要先获得myClass对象的锁。
+线程想要执行myClass.myFunction(); 就要先获得myClass对象的锁。     
 
-
+      
 ##### synchronized作用域： 
 
 1) 某个对象实例内，synchronized  aMethod(){}可以防止多个线程同时访问这个对象的synchronized方法（如果一个对象有多个synchronized方法，只要一个线程访问了其中的一个synchronized方法，其它线程不能同时访问这个对象中任何一个synchronized方法）。这时，不同的对象实例的synchronized方法是不相干扰的。也就是说，其它线程照样可以同时访问相同类的另一个对象实例中的synchronized方法； 
@@ -44,8 +44,9 @@ public static void main(){
 
 除了方法前用synchronized关键字，synchronized关键字还可以用于方法中的某个区块中，表示只对这个区块的资源实行互斥访问。用法是: synchronized(this){...}，它的作用域是this，即是当前对象。当然这个括号里可以是任何对象，synchronized对方法和块的含义和用法无本质不同； 
 
-synchronized关键字是不能继承的，也就是说，基类的方法synchronized f(){} 在继承类中并不自动是synchronized f(){}，而是变成了f(){}。继承类需要你显式的指定它的某个方法为synchronized方法； 
+synchronized关键字是不能继承的，也就是说，基类的方法synchronized f(){} 在继承类中并不自动是synchronized f(){}，而是变成了f(){}。继承类需要你显式的指定它的某个方法为synchronized方法；       
 
+         
 ##### synchronized可能造成死锁
 
 {% highlight java %}
@@ -69,26 +70,30 @@ class DeadLockSample{
 }  
 {% endhighlight %}
 
-> 假设场景：线程A调用methodOne()，获得lock1的隐式锁后，在获得lock2的隐式锁之前线程B进入运行，调用methodTwo()，抢先获得了lock2的隐式锁，此时线程A等着线程B交出lock2，线程B等着lock1进入方法块，死锁就这样被创造出来了。 
+> 假设场景：线程A调用methodOne()，获得lock1的隐式锁后，在获得lock2的隐式锁之前线程B进入运行，调用methodTwo()，抢先获得了lock2的隐式锁，此时线程A等着线程B交出lock2，线程B等着lock1进入方法块，死锁就这样被创造出来了。      
+     
+     
+#### wait/notify
 
-#### wait()/notify()
+**wait/notify：调用任意对象的wait方法导致线程阻塞，并且该对象上的锁被释放。**
 
-**wait()/notify()：调用任意对象的 wait() 方法导致线程阻塞，并且该对象上的锁被释放。**
-**而调用任意对象的notify()方法则导致因调用该对象的 wait() 方法而阻塞的线程中随机选择的一个解除阻塞（但要等到获得锁后才真正可执行）。** 
-
-#### synchronized与wait()/notify()关系
+**而调用任意对象的notify方法则导致因调用该对象的wait方法而阻塞的线程中随机选择的一个解除阻塞（但要等到获得锁后才真正可执行）。**       
+        
+           
+#### synchronized与wait/notify关系
 
 有synchronized的地方不一定有wait,notify 
 
 有wait,notify的地方必有synchronized。
 这是因为wait和notify不是属于线程类，而是每一个对象都具有的方法（事实上，这两个方法是Object类里的），而且这两个方法都和对象锁有关，有锁的地方，必有synchronized。
 
-慢着，让我们思考一下Java这个设计是否合理？前面说了，锁是针对对象的，wait()/notify()的操作是与对象锁相关的，那么把wait()/notify()设计在Object中也就是合情合理的了。 
+慢着，让我们思考一下Java这个设计是否合理？前面说了，锁是针对对象的，wait/notify的操作是与对象锁相关的，那么把wait/notify设计在Object中也就是合情合理的了。 
 
 恩，再想一下，为什么有wait,notify的地方必有synchronized？ 
-synchronized方法中由当前线程占有锁。另一方面，调用wait()notify()方法的对象上的锁必须为当前线程所拥有。因此，wait()/notify()方法调用必须放置在synchronized方法中，**synchronized方法的上锁对象就是调用wait()notify()方法的对象**。若不满足这一条件，则程序虽然仍能编译，但在运行时会出现IllegalMonitorStateException 异常。 
-
-##### 举了栗子银行转账
+synchronized方法中由当前线程占有锁。另一方面，调用wait/notify方法的对象上的锁必须为当前线程所拥有。因此，wait/notify方法调用必须放置在synchronized方法中，**synchronized方法的上锁对象就是调用wait()notify()方法的对象**。若不满足这一条件，则程序虽然仍能编译，但在运行时会出现IllegalMonitorStateException 异常。       
+         
+         
+##### 举了栗子-银行转账
 
 同一时刻只有一个人可以转账，那么我们自然想到在Bank类中有一个同步的转账方法： 
 
@@ -130,7 +135,7 @@ public Class Bank(){
 
 另外注意一点： 
 **能调用wait()/notify()的只有当前线程，前提是必须获得了对象锁，就是说必须要进入到synchronized方法中。 **
-
+        
 ### JMM与synchronized：
 
 #### JMM
@@ -152,8 +157,8 @@ JVM中（留神：马上讲到的这两个存储区只在JVM内部与物理存�
 
 > 现在举个例子，设想两个棋手要通过两个终端显示器(Working Memory)对奕，而观众要通过服务器大屏幕(Main Memory )观看他们的比赛过程。这两个棋手相当于是同步中的线程，观众相当于其它线程。棋手是无法直接操作服务器的大屏幕的，他只能看到自己的终端显示器，只能先从服务器上将当前结果先复制到自己的终端上（步骤1），然后在自己的终端上操作（步骤2），将操作的结果记录在终端上，然后在某一时刻同步到服务器上（步骤3）。他所能看到的结果就是从服务器上复制到自己的终端上的内容，而要想把自己操作后的结果让其他人看到必须同步到服务器上才行。至于什么时候同步，那要看终端和服务器的通信机制。 
 
-回到这三个步骤，这个顺序是我们希望的，但是，JVM并不保证第1步和第3步会严格按照上述次序立即执行。因为根据java语言规范的 规定，线程的工作内存和主存间的数据交换是松耦合的，什么时候需要刷新工作内存或者什么时候更新主存的内容，可以由具体的虚拟机实现自行决定。由于JVM可以对特征代码进行调优，也就改变了某些运行步骤的次序的颠倒，那么每次线程调用变量时是直接取 自己的工作存储器中的值还是先从主存储器复制再取是没有保证的，任何一种情况都可能发生。同样的，线程改变变量的值之后，是 否马上写回到主存储器上也是不可保证的，也许马上写，也许过一段时间再写。那么，在多线程的应用场景下就会出现问题了，多个 线程同时访问同一个代码块，很有可能某个线程已经改变了某变量的值，当然现在的改变仅仅是局限于工作内存中的改变，此时JVM并 不能保证将改变后的值立马写到主内存中去，也就意味着有可能其他线程不能立马得到改变后的值，依然在旧的变量上进行各种操作 和运算，最终导致不可预料的结果。 
-
+回到这三个步骤，这个顺序是我们希望的，但是，JVM并不保证第1步和第3步会严格按照上述次序立即执行。因为根据java语言规范的 规定，线程的工作内存和主存间的数据交换是松耦合的，什么时候需要刷新工作内存或者什么时候更新主存的内容，可以由具体的虚拟机实现自行决定。由于JVM可以对特征代码进行调优，也就改变了某些运行步骤的次序的颠倒，那么每次线程调用变量时是直接取 自己的工作存储器中的值还是先从主存储器复制再取是没有保证的，任何一种情况都可能发生。同样的，线程改变变量的值之后，是 否马上写回到主存储器上也是不可保证的，也许马上写，也许过一段时间再写。那么，在多线程的应用场景下就会出现问题了，多个 线程同时访问同一个代码块，很有可能某个线程已经改变了某变量的值，当然现在的改变仅仅是局限于工作内存中的改变，此时JVM并 不能保证将改变后的值立马写到主内存中去，也就意味着有可能其他线程不能立马得到改变后的值，依然在旧的变量上进行各种操作 和运算，最终导致不可预料的结果。            
+         
 #### synchronized和volatile
 
 这可如何是好呢？还好有synchronized和volatile： 
@@ -164,7 +169,7 @@ JVM中（留神：马上讲到的这两个存储区只在JVM内部与物理存�
 
 3) volatile负责线程中的变量与主存储区同步.但不负责每个线程之间的同步. 
 volatile的含义是：**线程在试图读取一个volatile变量时，会从主内存区中读取最新的值。现在很清楚了吧。**
-
+          
 ### ThreadLocal与synchronized
 
 在JDK的API文档中ThreadLocal的定义第一句道出：This class provides thread-local variables.
@@ -208,14 +213,14 @@ public class ThreadLocalDemo implements Runnable {
         System.out.println("thread "+currentThreadName +" set age to:"+age);    
         Student student = getStudent();  //每个线程都独立维护一个Student变量  
         student.setAge(age);    
-        System.out.println("thread "+currentThreadName+" first  read age is:"+student.getAge());    
+        System.out.println("thread "+currentThreadName+" first read age is:"+student.getAge());    
         try {    
         Thread.sleep(5000);    
         }    
         catch(InterruptedException ex) {    
             ex.printStackTrace();    
         }    
-        System.out.println("thread "+currentThreadName +" second read age is:"+student.getAge());    
+        System.out.println("thread "+currentThreadName+" second read age is:"+student.getAge());    
             
     }    
         
@@ -240,13 +245,13 @@ ThreadLocal通过一个Map来为每个线程都持有一个变量副本，用Thr
 
 既然说到了synchronized，顺便说说ReentrantLock吧。 
 ReentrantLock不熟悉？没事，concurrent包里的ArrayBlockingQueue知道吧，去看看源码，发现了吧，里面全是ReentrantLock。 
-好，言归正传，ReentrantLock是何方神圣？先这么说吧，你可以认为ReentrantLock是具有和synchronized类似功能的性能功能加强版同步锁。 
-
+好，言归正传，ReentrantLock是何方神圣？先这么说吧，你可以认为ReentrantLock是具有和synchronized类似功能的性能功能加强版同步锁。            
+          
 #### synchronized缺点： 
 
 1） 只有一个condition与锁相关联，这个condition是什么？就是synchronized对针对的对象锁。 
-2） 多线程竞争一个锁时，其余未得到锁的线程只能不停的尝试获得锁，而不能中断。这种情况对于大量的竞争线程会造成性能的下降等后果。 
-
+2） 多线程竞争一个锁时，其余未得到锁的线程只能不停的尝试获得锁，而不能中断。这种情况对于大量的竞争线程会造成性能的下降等后果。         
+               
 #### ReentrantLock
 
 针对synchronized的一系列缺点，JDK5提供了ReentrantLock，目的是为同步机制进行改善。
@@ -275,7 +280,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E> implements BlockingQ
         try {    
             try {    
                 while (count == 0)    
-                    notEmpty.await();  //这里针对notEmpty这个condition，如果队列为空则线程等待这个条件  
+                    notEmpty.await();  //针对notEmpty这个condition，如果队列为空则线程等待这个条件  
             } catch (InterruptedException ie) {    
                 notEmpty.signal();   
                 throw ie;    
@@ -305,7 +310,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E> implements BlockingQ
 2) ReentrantLock提供了lockInterruptibly()方法可以优先考虑响应中断，而不是像synchronized那样不响应interrupt()操作。 
 解释一下响应中断是什么意思：比如A、B两线程去竞争锁，A得到了锁，B等待，但是A有很多事情要处理，所以一直不返回。B可能就会等不及了，想中断自己，不再等待这个锁了，转而处理其他事情。在这种情况下，synchronized的做法是，B线程中断自己（或者别的线程中断它），我不去响应，继续让B线程等待，你再怎么中断，我全当耳边风。而lockInterruptibly()的做法是，B线程中断自己（或者别的线程中断它），ReentrantLock响应这个中断，不再让B等待这个锁的到来。 
 有了这个机制，使用ReentrantLock时就不会像synchronized那样产生死锁了。 
-
+                 
 #### ReentrantLock与synchronized对比
 
 由于ReentrantLock在提供了多样的同步功能（除了可响应中断，还能设置时间限制），因此在同步比较激烈的情况下，性能比synchronized大大提高。 
