@@ -34,22 +34,39 @@
     <script src="/assets/js/tagcanvas.min.js" type="text/javascript"></script>
 
     <script type="text/javascript">
-    window.onload = function() {
-      try {
-          TagCanvas.Start('myCanvas','tags',{
-          textFont: null,
-          textColour: null,
-          weight: true
-        });
-      } catch(e) {
+//<![CDATA[
+window.onload = function() {
+	TagCanvas.textFont = 'Impact,"Arial Black",sans-serif';
+	TagCanvas.textColour = '#00f';
+	TagCanvas.textHeight = 25;
+	TagCanvas.outlineColour = '#f60';
+	TagCanvas.outlineThickness = 5;
+	TagCanvas.outlineOffset = 1;
+	TagCanvas.outlineMethod = 'block';
+	TagCanvas.maxSpeed = 0.06;
+	TagCanvas.minBrightness = 0.1;
+	TagCanvas.depth = 0.95;
+	TagCanvas.pulsateTo = 0.2;
+	TagCanvas.pulsateTime = 0.75;
+	TagCanvas.decel = 0.9;
+	TagCanvas.reverse = true;
+	TagCanvas.hideTags = false;
+	TagCanvas.shadow = '#ccf';
+	TagCanvas.shadowBlur = 3;
+	TagCanvas.wheelZoom = false;
+  TagCanvas.fadeIn = 800;
+	try {
+		TagCanvas.Start('myCanvas','tags', {textFont:null, textColour:null, weight: true});
+	} catch(e) {
         // something went wrong, hide the canvas container
         var myCanvasContainer = document.getElementById('myCanvasContainer');
         if (myCanvasContainer) {
           myCanvasContainer.style.display = 'none';
         };
       }
-    };
-    </script>
+};
+//]]>
+</script>
   </head>
 
   <body>
