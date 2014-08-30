@@ -11,7 +11,7 @@ title: HelloSure
 <div id="tags">
   <ul>
     {% for tag in site.tags %}
-    <li><a href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref" style="color: getTagColor({{ tag[1].size }});">{{ tag[0] }}</a></li>
+    <li><a href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref" onload="setTagColor(this, {{ tag[1].size }});">{{ tag[0] }}</a></li>
     {% endfor %}
   </ul>
 </div>
