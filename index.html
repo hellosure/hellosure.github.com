@@ -13,7 +13,11 @@ title: HelloSure
   <ul>
     {% for tag in site.tags %}
     <li>
-      <a style="{% if tag[1].size==1 %} color:#ff0000 {% endif %}" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% if tag[1].size == 1 %}
+      <a style="color:#ff0000" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% else %}
+      <a style="color:#000fff" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% endif %}
     </li>
     {% endfor %}
   </ul>
