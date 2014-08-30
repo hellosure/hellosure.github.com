@@ -37,7 +37,7 @@
     window.onload = function() {
       try {
           TagCanvas.Start('myCanvas','tags',{
-          textFont: 'Trebuchet MS, Helvetica, sans-serif',
+          textFont: null,
           textColour: null,
           textHeight: 25,
           outlineColour: '#ff9999',
@@ -52,7 +52,7 @@
           hideTags: true,
           shadow: '#ccf',
           shadowBlur: 3,
-          weight: false,
+          weight: true,
           imageScale: null,
           fadeIn: 1000
         });
@@ -65,25 +65,7 @@
       }
       
     };
-    
-    
-    
-     function setTagColor(a, size){
-        if(size==1){
-          a.style.color="#38B738";
-        }else if(size==2){
-          a.style.color="#0066FF";
-        }else if(size==3){
-          a.style.color="#9900CC";
-        }else if(size==4){
-          a.style.color="#FF6666";
-        }else if(size==5){
-          a.style.color="#6666FF";
-        }else{
-          a.style.color="#FFCC00";
-        }
-      }
-      
+ 
     </script>
   </head>
 
