@@ -105,7 +105,7 @@ final Segment<K,V>[] segments;
 
 有些方法需要跨段，比如size()和containsValue()，它们可能需要锁定整个表而而不仅仅是某个段，这需要按顺序锁定所有段，操作完毕后，又按顺序释放所有段的锁。这里“按顺序”是很重要的，否则极有可能出现死锁。 
 
-ConcurrentHashMap完全允许多个读操作并发进行，读操作并不需要加锁。（**事实上，ConcurrentHashMap支持完全并发的读以及一定程度并发的写。**）如果使用传统的技术，如HashMap中的实现，如果允许可以在hash链的中间添加或删除元素，读操作不加锁将得到不一致的数据。但是ConcurrentHashMap实现技术是保证HashEntry几乎是不可变的。HashEntry代表每个hash链中的一个节点，其结构如下所示： 
+ConcurrentHashMap完全允许多个读操作并发进行，读操作并不需要加锁。（`事实上，ConcurrentHashMap支持完全并发的读以及一定程度并发的写。`）如果使用传统的技术，如HashMap中的实现，如果允许可以在hash链的中间添加或删除元素，读操作不加锁将得到不一致的数据。但是ConcurrentHashMap实现技术是保证HashEntry几乎是不可变的。HashEntry代表每个hash链中的一个节点，其结构如下所示： 
 {% highlight java %}
 static final class HashEntry<K,V> {    
     final K key;    
@@ -151,8 +151,8 @@ count用来统计该段数据的个数，它是volatile，它用来协调修改�
 在实际的应用中，散列表一般的应用场景是：除了少数插入操作和删除操作外，绝大多数都是读取操作，而且读操作在大多数时候都是成功的。正是基于这个前提，ConcurrentHashMap 针对读操作做了大量的优化。通过 HashEntry 对象的不变性和用 volatile 型变量协调线程间的内存可见性，使得ConcurrentHashMap支持完全并发的读以及一定程度并发的写
 
 ConcurrentHashMap 的高并发性主要来自于三个方面：
-    （1）用分离锁实现多个线程间的更深层次的共享访问。使用分离锁，减小了请求同一个锁的频率。 
-    （2）用 HashEntery 对象的不变性来降低执行读操作的线程在遍历链表期间对加锁的需求。 
-    （3）通过对同一个 Volatile 变量的写 / 读访问，协调不同线程间读 / 写操作的内存可见性。 
+1) 用分离锁实现多个线程间的更深层次的共享访问。使用分离锁，减小了请求同一个锁的频率。 
+2) 用 HashEntery 对象的不变性来降低执行读操作的线程在遍历链表期间对加锁的需求。 
+3) 通过对同一个 Volatile 变量的写 / 读访问，协调不同线程间读 / 写操作的内存可见性。 
     
 -EOF-
