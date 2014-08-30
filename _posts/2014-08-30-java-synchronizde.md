@@ -20,7 +20,7 @@ tags: [Java,多线程,同步,synchronized,JMM,ThreadLocal,ReentrantLock]
 
 synchronized是针对对象的隐式锁使用的，注意是对象！ 
 
-{% highlight java %}
+```
 Class MyClass(){ 
   	synchronized void myFunction(){  
     		//do something  
@@ -31,7 +31,7 @@ public static void main(){
   	MyClass myClass = new MyClass();  
   	myClass.myFunction();  
 }  
-{% endhighlight %}
+```
 
 线程想要执行myClass.myFunction(); 就要先获得myClass对象的锁。     
 
@@ -90,7 +90,7 @@ class DeadLockSample{
 慢着，让我们思考一下Java这个设计是否合理？前面说了，锁是针对对象的，wait/notify的操作是与对象锁相关的，那么把wait/notify设计在Object中也就是合情合理的了。 
 
 恩，再想一下，为什么有wait,notify的地方必有synchronized？ 
-synchronized方法中由当前线程占有锁。另一方面，调用wait/notify方法的对象上的锁必须为当前线程所拥有。因此，wait/notify方法调用必须放置在synchronized方法中，**synchronized方法的上锁对象就是调用wait()notify()方法的对象**。若不满足这一条件，则程序虽然仍能编译，但在运行时会出现IllegalMonitorStateException 异常。       
+synchronized方法中由当前线程占有锁。另一方面，调用wait/notify方法的对象上的锁必须为当前线程所拥有。因此，wait/notify方法调用必须放置在synchronized方法中，**synchronized方法的上锁对象就是调用wait/notify方法的对象**。若不满足这一条件，则程序虽然仍能编译，但在运行时会出现IllegalMonitorStateException 异常。       
          
          
 ##### 举了栗子-银行转账
@@ -126,14 +126,16 @@ public Class Bank(){
 {% endhighlight %}
 
 这样就满足需求了。 
-**可见，用对象锁来管理试图进入synchronized方法的线程， **
-**另外，由条件判断来管理已经进入同步方法中的线程即当前线程** 
+**可见，用对象锁来管理试图进入synchronized方法的线程，另外，由条件判断来管理已经进入同步方法中的线程即当前线程** 
 
 这里还补充两点： 
+
 1) 调用wait()方法前的判断最好用while，而不用if；因为while可以实现被唤醒后线程再次作条件判断；而if则只能判断一次 
+
 2) 用notifyAll()优先于notify()。 
 
 另外注意一点： 
+
 **能调用wait()/notify()的只有当前线程，前提是必须获得了对象锁，就是说必须要进入到synchronized方法中。 **
         
 ### JMM与synchronized：
@@ -151,8 +153,11 @@ JVM中（留神：马上讲到的这两个存储区只在JVM内部与物理存�
 ![jmm](http://photo2.bababian.com/usr832855/upload1/20090614/sBtYKP1GU1okcV3oHvBCcWyO9WOwCsqaK9YtCbHK70RnhSeacQjf2Mg==.jpg "JMM")
 
 线程对某个变量的操作步骤： 
+
 1. 从主内存中复制数据到工作内存 
+2. 
 2. 执行代码，对数据进行各种操作和计算 
+3. 
 3. 把操作后的变量值重新写回主内存中 
 
 > 现在举个例子，设想两个棋手要通过两个终端显示器(Working Memory)对奕，而观众要通过服务器大屏幕(Main Memory )观看他们的比赛过程。这两个棋手相当于是同步中的线程，观众相当于其它线程。棋手是无法直接操作服务器的大屏幕的，他只能看到自己的终端显示器，只能先从服务器上将当前结果先复制到自己的终端上（步骤1），然后在自己的终端上操作（步骤2），将操作的结果记录在终端上，然后在某一时刻同步到服务器上（步骤3）。他所能看到的结果就是从服务器上复制到自己的终端上的内容，而要想把自己操作后的结果让其他人看到必须同步到服务器上才行。至于什么时候同步，那要看终端和服务器的通信机制。 
@@ -250,6 +255,7 @@ ReentrantLock不熟悉？没事，concurrent包里的ArrayBlockingQueue知道吧
 #### synchronized缺点： 
 
 1） 只有一个condition与锁相关联，这个condition是什么？就是synchronized对针对的对象锁。 
+
 2） 多线程竞争一个锁时，其余未得到锁的线程只能不停的尝试获得锁，而不能中断。这种情况对于大量的竞争线程会造成性能的下降等后果。         
                
 #### ReentrantLock
