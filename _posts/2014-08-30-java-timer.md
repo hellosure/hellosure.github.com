@@ -58,7 +58,7 @@ class TimerThread extends Thread {
         }  
     }  
   
-private void mainLoop() {  
+    private void mainLoop() {  
         while (true) {  
             try {  
                 TimerTask task;  
@@ -179,9 +179,10 @@ private void sched(TimerTask task, long time, long period) {
 ### Quartz
 
 下面再来说说Quartz，Quartz提供了比Timer更加强大的时序调度功能。 
-关于Quartz，我不想说太多，原因在于：[Quartz官方](http://www.quartz-scheduler.org/)提供的15个例子太经典啦！！！还在网上找神马乱七八糟的例子啊，这15个例子看看自己跑跑试试，学起来又快又轻松！！！
+关于Quartz，我不想说太多，原因在于：[Quartz官方](http://www.quartz-scheduler.org/)提供的[15个例子](http://dl.iteye.com/topics/download/de6149ff-41f6-3c24-9abb-02526ba37c12)太经典，这15个例子看看自己跑跑试试，学起来又快又轻松。
 
 为了再降低一下看代码的门槛，这里提供一些关键的概念性的描述。
+
 #### Job
 
 接口，只有一个方法void execute(JobExecutionContext context)，开发者实现该接口定义Job所运行的任务，JobExecutionContext类提供了调度上下文的各种信息。Job运行时的信息保存在JobDataMap实例中。
@@ -205,5 +206,7 @@ Trigger和JobDetail可以注册到Scheduler中，两者在Scheduler中拥有各�
 #### ThreadPool
 
 Scheduler使用一个线程池作为任务运行的基础设施，任务通过共享线程池中的线程提高运行效率。
+
+      
 
 -EOF-
