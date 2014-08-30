@@ -2,7 +2,7 @@
 layout: post
 title: Java多线程之聊一聊Queue
 category: Java
-tags: [Java,多线程,BlockingQueue,]
+tags: [Java,多线程,BlockingQueue,ConcurrentLinkedQueue]
 ---
 
 迁移自[Java多线程总结之聊一聊Queue](http://hellosure.iteye.com/blog/1126541)
