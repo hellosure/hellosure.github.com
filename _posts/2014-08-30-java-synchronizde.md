@@ -6,10 +6,14 @@ tags: [Java,多线程]
 ---
 
 迁移自[Java多线程总结之由synchronized说开去](http://hellosure.iteye.com/blog/1121157)
+1. synchronized与wait()/notify()
+2. JMM与synchronized
+3. ThreadLocal与synchronized
+4. ReentrantLock与synchronized
 
 ## synchronized与wait()/notify()：
-##### synchronized：
-> 最重要一条： 
+ 
+最重要一条： 
 **synchronized是针对对象的隐式锁使用的，注意是对象！ **
 
 举个小例子，该例子没有任何业务含义，只是为了说明synchronized的基本用法：
@@ -63,59 +67,115 @@ class DeadLockSample{
 }  
 {% endhighlight %}
 
-##### RubyGems（Ruby程序包管理器）：
-> 下载[rubygems-2.1.7.zip](http://production.cf.rubygems.org/rubygems/rubygems-2.1.7.zip)压缩包，解压到文件夹cd打开，    安装命令：ruby setup.rb 查看更多的信息和参数：ruby setup.rb --help
-##### Jekyll：
+假设场景：线程A调用methodOne()，获得lock1的隐式锁后，在获得lock2的隐式锁之前线程B进入运行，调用methodTwo()，抢先获得了lock2的隐式锁，此时线程A等着线程B交出lock2，线程B等着lock1进入方法块，死锁就这样被创造出来了。 
 
-        {% highlight bash %}
-        ~ $ gem install jekyll
-        ~ $ jekyll new myblog
-        ~ $ cd myblog
-        ~/myblog $ jekyll server
-        # => 浏览器打开 http://localhost:4000{% endhighlight %}
+下面举一个有业务含义的例子帮助理解，并展示一下synchronized与wait()、notifyAll()的使用。 
+这里先介绍一下这两个方法： 
+**wait()/notify()：调用任意对象的 wait() 方法导致线程阻塞，并且该对象上的锁被释放。而调用任意对象的notify()方法则导致因调用该对象的 wait() 方法而阻塞的线程中随机选择的一个解除阻塞（但要等到获得锁后才真正可执行）。** 
 
-## Jekyll-Bootstrap搭建博客：
-##### 1. [GitHub](https://github.com)上面创建新的仓库，例如codingtiger.github.com。
-##### 2. 安装Jekyll-Bootstrap
+好了，再来看看synchronized与这两个方法之间的关系： 
+1.有synchronized的地方不一定有wait,notify 
 
-        {% highlight bash %}
-        git clone https://github.com/plusjade/jekyll-bootstrap.git codingtiger.github.com
-        #克隆jekyll-bootstrap代码到本地
-        cd codingtiger.github.com
-        git remote set-url origin git@github.com:codingtiger/codingtiger.github.com.git
-        git push origin master{% endhighlight %}
-> 安装的过程中可以通过本机安装的Windows Git客户端操作，也可以通过GitHub for Windows操作。
+2.有wait,notify的地方必有synchronized.这是因为wait和notify不是属于线程类，而是每一个对象都具有的方法（事实上，这两个方法是Object类里的），而且，这两个方法都和对象锁有关，有锁的地方，必有synchronized。 
+慢着，让我们思考一下Java这个设计是否合理？前面说了，锁是针对对象的，wait()/notify()的操作是与对象锁相关的，那么把wait()/notify()设计在Object中也就是合情合理的了。 
+恩，再想一下，为什么有wait,notify的地方必有synchronized？ 
+synchronized方法中由当前线程占有锁。另一方面，调用wait()notify()方法的对象上的锁必须为当前线程所拥有。因此，wait()notify()方法调用必须放置在synchronized方法中，**synchronized方法的上锁对象就是调用wait()notify()方法的对象**。若不满足这一条件，则程序虽然仍能编译，但在运行时会出现IllegalMonitorStateException 异常。 
 
-##### 2. 创建文章
-> rake post会自动在_posts文件夹下面创建Markdown文件，编辑文件即可。Markdown文件可以使用Sublime Text 2的Markdown插件MarkdownEditing来编辑。
+好了，以上准备知识充足了，现在说例子：银行转账，同一时刻只有一个人可以转账。 
+那么我们自然想到在Bank类中有一个同步的转账方法： 
+{% highlight java %}
+public Class Bank(){  
+  float account[ACCOUNT_NUM];  
+  ...  
+  public synchronized void transfer(from, to, amount){  
+    //转账  
+  }  
+}  
+{% endhighlight %}
 
-        {% highlight ruby %}
-        rake post title="Hello World"
-        Creating new post: ./_posts/2013-10-23-hello-world.md{% endhighlight %}
+现在有一个问题，如果一个人获得了使用银行的锁，但是余额不足怎么办？ 
+好，那我们进行改进： 
+{% highlight java %}
+public Class Bank(){  
+  float account[ACCOUNT_NUM];  
+  ...  
+  public synchronized void transfer(int from, int to, float amount){  
+    while(account[from]){  
+      wait();  
+    }  
+    account[from] -= amount;  
+    account[to] += amount;  
+    notifyAll();  
+  }  
+}  
+{% endhighlight %}
 
-> 创建完成通过安装在本地的Jekyll就可以进行调试。**本地调试过程如果出现以下问题：error: invalid byte sequence in GBK.可以找到ruby安装目录下convertible.rb，修改**
+这样就满足需求了。 
+**可见，用对象锁来管理试图进入synchronized方法的线程， **
+**另外，由条件判断来管理已经进入同步方法中的线程即当前线程** 
+这里还补充两点： 
+1. 调用wait()方法前的判断最好用while，而不用if；因为while可以实现被唤醒后线程再次作条件判断；而if则只能判断一次 
+2. 用notifyAll()优先于notify()。 
+另外注意一点： 
+**能调用wait()/notify()的只有当前线程，前提是必须获得了对象锁，就是说必须要进入到synchronized方法中。 **
 
-        {% highlight ruby %}
-        self.content = File.read(File.join(base, name)){% endhighlight %}
+## JMM与synchronized：
+补充一点JMM的相关知识，对理解线程同步很有好处。 
 
-> 为
+JVM中（留神：马上讲到的这两个存储区只在JVM内部与物理存储区无关）存在一个主内存（Main Memory），Java中所有的变量存储在主内存中，所有实例和实例的字段都在此区域，对于所有的线程是共享的（相当于黑板，其他人都可以看到的）。每个线程都有自己的工作内存（Working Memory），工作内存中保存的是主存中变量的拷贝，（相当于自己笔记本，只能自己看到），工作内存由缓存和堆栈组成，其中缓存保存的是主存中的变量的copy，堆栈保存的是线程局部变量。线程对所有变量的操作都是在工作内存中进行的，线程之间无法直接互相访问工作内存，变量的值得变化的传递需要主存来完成。在JMM中通过并发线程修改的变量值，必须通过线程变量同步到主存后，其他线程才能访问到。 
+看看这个图是不是更形象
+![jmm](http://photo2.bababian.com/usr832855/upload1/20090614/sBtYKP1GU1okcV3oHvBCcWyO9WOwCsqaK9YtCbHK70RnhSeacQjf2Mg==.jpg "JMM")
 
-        {% highlight ruby %}
-        self.content = File.read(File.join(base, name), :encoding => "utf-8"){% endhighlight %}
 
-> 如果还出现这个问题，可以在当前命令行窗口执行以下命令，需要每次打开命令行窗口都执行：
 
-        {% highlight bash %}
-        chcp 65001
-        #DOS命令chcp显示或设置活动代码页（字符集编码）编号，65001对应UTF-8{% endhighlight %}
 
-##### 3. 发布
-> 可以通过[GitHub for Windows](http://github-windows.s3.amazonaws.com/GitHubSetup.exe)进行发布操作。也可以使用以下Git命令发布。
-        {% highlight bash %}
-        git add .
-        git commit -m "注释内容"
-        git push origin master{% endhighlight %}
-##### 4. 域名绑定
-> 上传成功之后，等10分钟左右，就可以使用[codingtiger.github.io](http://codingtiger.github.io/)进行访问。如果不想使用这个域名，可以在工程根目录下面创建CNAME文件，写入绑定域名，例如www.wozhimeng.com。
+
+A First Level Header
+====================
+A Second Level Header
+---------------------
+
+Now is the time for all good men to come to
+the aid of their country. This is just a
+regular paragraph.
+
+The quick brown fox jumped over the lazy
+dog's back.
+### Header 3
+
+> This is a blockquote.
+> 
+> This is the second paragraph in the blockquote.
+>
+> ## This is an H2 in a blockquote
+
+
+
+
+Some of these words *are emphasized*.
+Some of these words _are emphasized also_.
+Use two asterisks for **strong emphasis**.
+Or, if you prefer, __use two underscores instead__.
+
+
+
+
++ Candy.
++ Gum.
++ Booze.
+ 
+
+1. Red
+2. Green
+3. Blue
+4. 
+
+
+
+
+I strongly recommend against using any `<blink>` tags.
+
+I wish SmartyPants used named entities like `&mdash;`
+instead of decimal-encoded entites like `&#8212;`.
 
 -EOF-
