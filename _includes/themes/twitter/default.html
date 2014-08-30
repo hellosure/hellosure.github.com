@@ -37,8 +37,8 @@
     window.onload = function() {
       try {
           TagCanvas.Start('myCanvas','tags',{
-          textFont: 'Trebuchet MS, Helvetica, sans-serif',
-          textColour: '#00f',
+          textFont: null,
+          textColour: null,
           textHeight: 25,
           outlineColour: '#ff9999',
           maxSpeed: 0.03,
@@ -52,7 +52,7 @@
           hideTags: true,
           shadow: '#ccf',
           shadowBlur: 3,
-          weight: false,
+          weight: true,
           imageScale: null,
           fadeIn: 1000
         });
