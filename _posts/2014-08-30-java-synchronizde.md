@@ -20,7 +20,7 @@ tags: [Java,多线程,同步,synchronized,JMM,ThreadLocal,ReentrantLock]
 
 synchronized是针对对象的隐式锁使用的，注意是对象！ 
 
-{% highlight java %}
+{% highlight java linenos %}
 Class MyClass(){ 
   	synchronized void myFunction(){  
     		//do something  
