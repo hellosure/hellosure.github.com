@@ -49,7 +49,7 @@ synchronized关键字是不能继承的，也就是说，基类的方法synchron
          
 ##### synchronized可能造成死锁
 
-{% highlight java %}
+{% highlight c linenos %}
 class DeadLockSample{    
     public final Object lock1 = new Object();    
     public final Object lock2 = new Object();    
@@ -97,7 +97,7 @@ synchronized方法中由当前线程占有锁。另一方面，调用wait/notify
 
 同一时刻只有一个人可以转账，那么我们自然想到在Bank类中有一个同步的转账方法： 
 
-{% highlight java %}
+{% highlight ruby linenos %}
 public Class Bank(){  
   float account[ACCOUNT_NUM];  
   ...  
