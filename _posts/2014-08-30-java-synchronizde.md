@@ -49,7 +49,7 @@ synchronized关键字是不能继承的，也就是说，基类的方法synchron
          
 ##### synchronized可能造成死锁
 
-{% highlight c linenos %}
+{% highlight java linenos %}
 class DeadLockSample{    
     public final Object lock1 = new Object();    
     public final Object lock2 = new Object();    
@@ -97,7 +97,7 @@ synchronized方法中由当前线程占有锁。另一方面，调用wait/notify
 
 同一时刻只有一个人可以转账，那么我们自然想到在Bank类中有一个同步的转账方法： 
 
-{% highlight ruby linenos %}
+{% highlight java linenos %}
 public Class Bank(){  
   float account[ACCOUNT_NUM];  
   ...  
@@ -110,7 +110,7 @@ public Class Bank(){
 现在有一个问题，如果一个人获得了使用银行的锁，但是余额不足怎么办？ 
 好，那我们进行改进： 
 
-{% highlight java %}
+{% highlight java linenos %}
 public Class Bank(){  
   float account[ACCOUNT_NUM];  
   ...  
@@ -196,7 +196,7 @@ volatile的含义是：**线程在试图读取一个volatile变量时，会从�
 
 举个栗子：
 
-{% highlight java %}
+{% highlight java linenos %}
 public class ThreadLocalDemo implements Runnable {    
    private final static  ThreadLocal studentLocal = new ThreadLocal();  //ThreadLocal对象在这  
        
@@ -268,7 +268,7 @@ ReentrantLock不熟悉？没事，concurrent包里的ArrayBlockingQueue知道吧
 1） 一个ReentrantLock可以有多个Condition实例。 
 举个例子，还是刚才说的ArrayBlockingQueue类，看看源码（节选）： 
 
-{% highlight java %}
+{% highlight java linenos %}
 public class ArrayBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, java.io.Serializable {    
     ...    
     private final ReentrantLock lock;    
@@ -329,14 +329,15 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E> implements BlockingQ
 
 再补充一点，使用ReentrantLock时，切记要在finally中释放锁，这是与synchronized使用方式很大的一个不同。
 对于synchronized，JVM会自动释放锁，而ReentrantLock需要你自己来处理。 
-{% highlight java %}
+
+{% highlight java linenos %}
 //synchronized   
 public synchronized void increment() {  
     count++;  
 }  
 {% endhighlight %}
 
-{% highlight java %}
+{% highlight java linenos %}
 //ReentrantLock  
 public void increment() {  
     lock.lockInterruptibly();//上锁  
