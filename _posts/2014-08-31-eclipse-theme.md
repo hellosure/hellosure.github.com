@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Eclipse theme
+title: Eclipse theme模板设置
 category: Eclipse
 tags: [Eclipse]
 ---
