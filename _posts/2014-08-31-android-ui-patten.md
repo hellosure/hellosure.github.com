@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Android UI pattens
+title: Android UI设计模式翻译与总结
 category: Android
 tags: [Android,UI patten]
 ---
