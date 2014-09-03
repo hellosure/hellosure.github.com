@@ -2,7 +2,7 @@
 layout: post
 title: 在考虑创业之前需要先了解思考的
 category: 创业
-tags: [创业]
+tags: [创业,期权,股份]
 ---
 
 ### 我的疑问？
