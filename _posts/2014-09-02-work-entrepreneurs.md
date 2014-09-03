@@ -53,7 +53,7 @@ tags: [创业]
 
 5. 自己进去之后做什么？职位和收入是否稳定？是否有上升空间？是否能参与或影响决策？（公司的业务模式和组织结构，是否有利于发挥你的长处。比如公司以销售渠道为核心竞争力，还是以技术创新为核心竞争力；以产品需求为导向还是以技术研发为导向；设研发总监还设不设技术总监；这些一开始容易忽视的小问题，最后可能变成让你不爽的大问题。）
 
-** 最后，创业有风险，投身需谨慎。**
+**  最后，创业有风险，投身需谨慎。 **
 
 ### 期权
 
@@ -208,15 +208,15 @@ Vested：
 
 ### 创业公司如何筹集资金
 
-![1](http://photo.weibo.com/1687445053/wbphotos/large/photo_id/3582339110124014?refer=weibosearch "1")
+<img src="http://photo.weibo.com/1687445053/wbphotos/large/photo_id/3582339110124014?refer=weibosearch" />
 
 ### 一个项目的完整投资过程
 
-![2](http://photo.weibo.com/1750070171/wbphotos/large/photo_id/3718222958752197?refer=weibosearch "2")
+<img src="http://photo.weibo.com/1750070171/wbphotos/large/photo_id/3718222958752197?refer=weibosearch" />
 
 ### 互联网公司为何不在A股上市
 
-![3](http://photo.weibo.com/1642482194/wbphotos/large/photo_id/3723827244691220?refer=weibosearch "3")
+<img src="http://photo.weibo.com/1642482194/wbphotos/large/photo_id/3723827244691220?refer=weibosearch" />
 
 
 -EOF-
