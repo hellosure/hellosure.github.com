@@ -43,9 +43,13 @@ title: HelloSure
 
 <div>
     <ul>
+    {% capture new_date %}{{ site.posts[0].date | date: "%Y-%m-%d" }}{% endcapture %}
         {% for post in site.posts limit:10 %}
         <li style="margin-top:8px; margin-bottom:8px; font-size:16px"> &nbsp <a href="{{ post.url }}">{{ post.title }}</a>
-        <span style="float:right">&nbsp {{ post.date | date: "%Y-%m-%d" }}  &nbsp&nbsp</span>
+          
+          {% if post.date == new_date %}
+            <span style="float:right; color:#666666">&nbsp {{ post.date | date: "%Y-%m-%d" }}  &nbsp&nbsp</span>
+          {% endif %}
         </li>
         {% endfor %}
     </ul>
