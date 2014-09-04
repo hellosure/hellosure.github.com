@@ -45,7 +45,7 @@ title: HelloSure
     <ul>
         {% for post in site.posts limit:10 %}
         <li style="margin-top:8px; margin-bottom:8px; font-size:16px"> &nbsp <a href="{{ post.url }}">{{ post.title }}</a>
-        <span align="right">&nbsp {{ post.date | date: "%Y-%m-%d" }}  &nbsp&nbsp</span>
+        <span style="float:right">&nbsp {{ post.date | date: "%Y-%m-%d" }}  &nbsp&nbsp</span>
         </li>
         {% endfor %}
     </ul>
