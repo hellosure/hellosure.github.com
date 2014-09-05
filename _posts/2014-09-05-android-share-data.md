@@ -2,12 +2,12 @@
 layout: post
 title: 通过单例模式共享数据
 category: Android
-tags: [Android,Java,设计模式]
+tags: [Android,Java,设计模式,单例,共享,可定制化复用类]
 ---
 
 ### 问题引出
 
-想不通过Intent在Activity之间传递数据集。
+不想通过`Intent`在Activity之间传递数据集。
 目的是为了减少数据加载的次数，复用数据。
 
 ### 解决方法
@@ -55,26 +55,26 @@ public class ContactListUtil {
 {% highlight java %}
 
 class LoadContactTask extends AsyncTask<Object, Void, Object> {
-		@Override
-		protected void onPreExecute() {
-			progressBar.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		protected Object doInBackground(Object... params) {
-			initOrderData();
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Object result) {
-			progressBar.setVisibility(View.GONE);
-			refreshContactList(structList.get(structList.size() - 1));
-			//产生数据之后，将数据注入到单例类中
-			ContactListUtil.getInstance().setListData(sortedData);
-			ContactListUtil.getInstance().setTagLocation(tagLocation);
-		}
+	@Override
+	protected void onPreExecute() {
+		progressBar.setVisibility(View.VISIBLE);
 	}
+
+	@Override
+	protected Object doInBackground(Object... params) {
+		initOrderData();
+		return null;
+	}
+
+	@Override
+	protected void onPostExecute(Object result) {
+		progressBar.setVisibility(View.GONE);
+		refreshContactList(structList.get(structList.size() - 1));
+		//产生数据之后，将数据注入到单例类中
+		ContactListUtil.getInstance().setListData(sortedData);
+		ContactListUtil.getInstance().setTagLocation(tagLocation);
+	}
+}
 {% endhighlight %}
 
 2. 在需要使用该数据的时候，将数据注入到单例类中。例子中的`MultiChatUtil`的特点是当做传入`MultiChatContactActivity`的媒介，从不同的界面跳转到该Activity所需要注入的数据集是不同的，而且注入的数据集也是不同的。
@@ -82,23 +82,23 @@ class LoadContactTask extends AsyncTask<Object, Void, Object> {
 {% highlight java %}
 
 switch (menuID) {
-		case CONTACT_MULTI_CHAT:
-			if (null != ContactListUtil.getInstance().getListData()
-					&& null != ContactListUtil.getInstance().getTagLocation()
-					&& !ContactListUtil.getInstance().getListData().isEmpty()
-					&& !ContactListUtil.getInstance().getTagLocation().isEmpty()) {
-				//在需要跳转到MultiChatContactActivity时，注入所需要的数据集
-				MultiChatUtil.getInstance().setListData(ContactListUtil.getInstance().getListData());
-				MultiChatUtil.getInstance().setTagLocation(ContactListUtil.getInstance().getTagLocation());
-				Intent contactIntent = new Intent(context,MultiChatContactActivity.class);
-				contactIntent.putExtra("isRulerMode", true);
-				contactIntent.putExtra("isTalkMode", false);
-				context.startActivity(contactIntent);
-			} else {
-				new LoadContactTask().execute();
-			}
-			return true;
-			...
+	case CONTACT_MULTI_CHAT:
+	if (null != ContactListUtil.getInstance().getListData()
+			&& null != ContactListUtil.getInstance().getTagLocation()
+			&& !ContactListUtil.getInstance().getListData().isEmpty()
+			&& !ContactListUtil.getInstance().getTagLocation().isEmpty()) {
+		//在需要跳转到MultiChatContactActivity时，注入所需要的数据集
+		MultiChatUtil.getInstance().setListData(ContactListUtil.getInstance().getListData());
+		MultiChatUtil.getInstance().setTagLocation(ContactListUtil.getInstance().getTagLocation());
+		Intent contactIntent = new Intent(context,MultiChatContactActivity.class);
+		contactIntent.putExtra("isRulerMode", true);
+		contactIntent.putExtra("isTalkMode", false);
+		context.startActivity(contactIntent);
+	} else {
+		new LoadContactTask().execute();
+	}
+	return true;
+	...
 }
 {% endhighlight %}
 
@@ -106,31 +106,31 @@ switch (menuID) {
 
 {% highlight java %}
 public void onCreate(Bundle savedInstanceState) {
-		...
-		//通过mode来实现定制化
-		isRulerMode = getIntent().getBooleanExtra("isRulerMode", false);
-		isTalkMode = getIntent().getBooleanExtra("isTalkMode", false);
-		
-		//使用的时候从单例类中获取数据集
-		listData = MultiChatUtil.getInstance().getListData();
-		tagLocation = MultiChatUtil.getInstance().getTagLocation();
-		...
+	...
+	//通过mode来实现定制化
+	isRulerMode = getIntent().getBooleanExtra("isRulerMode", false);
+	isTalkMode = getIntent().getBooleanExtra("isTalkMode", false);
+	
+	//使用的时候从单例类中获取数据集
+	listData = MultiChatUtil.getInstance().getListData();
+	tagLocation = MultiChatUtil.getInstance().getTagLocation();
+	...
 }
 {% endhighlight %}
 
 #### 何时销毁数据
 
-1. ContactListUtil的数据可以认为整个应用存活期间都需要，因此不需要显示销毁。
+1. `ContactListUtil`的数据可以认为整个应用存活期间都需要，因此不需要显示销毁。
 
-2. MultiChatUtil的数据在使用完复用类`MultiChatContactActivity`之后就应该销毁。
+2. `MultiChatUtil`的数据在使用完复用类`MultiChatContactActivity`之后就应该销毁。
 
 {% highlight java %}
 
 protected void onDestroy() {
-		super.onDestroy();
-		MultiChatUtil.getInstance().setListData(null);
-		MultiChatUtil.getInstance().setTagLocation(null);
-	}
+	super.onDestroy();
+	MultiChatUtil.getInstance().setListData(null);
+	MultiChatUtil.getInstance().setTagLocation(null);
+}
 {% endhighlight %}
 
 EOF
