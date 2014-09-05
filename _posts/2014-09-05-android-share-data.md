@@ -14,7 +14,7 @@ tags: [Android,Java,设计模式]
 
 #### 通过单例类来共享数据
 
-<% highlight java %>
+{% highlight java %}
 
 public class ContactListUtil {
 
@@ -46,13 +46,13 @@ public class ContactListUtil {
 	}
 
 }
-<% endhighlight %>
+{% endhighlight %}
 
 #### 何时注入数据
 
 1. 数据产生的时候，将数据注入到单例类中。例子中的`ContactListUtil`是用来存放所有联系人的数据集，这个数据集的特点是含义固定，所以数据生成的位置是固定的，不随着所服务的界面而发生变化，而且生成了之后不考虑何时去使用它，仅需要知道肯定会被使用到。
 
-<% highlight java %>
+{% highlight java %}
 
 class LoadContactTask extends AsyncTask<Object, Void, Object> {
 		@Override
@@ -75,11 +75,11 @@ class LoadContactTask extends AsyncTask<Object, Void, Object> {
 			ContactListUtil.getInstance().setTagLocation(tagLocation);
 		}
 	}
-<% endhighlight %>
+{% endhighlight %}
 
 2. 在需要使用该数据的时候，将数据注入到单例类中。例子中的`MultiChatUtil`的特点是当做传入`MultiChatContactActivity`的媒介，从不同的界面跳转到该Activity所需要注入的数据集是不同的，而且注入的数据集也是不同的。
 
-<% highlight java %>
+{% highlight java %}
 
 switch (menuID) {
 		case CONTACT_MULTI_CHAT:
@@ -100,11 +100,11 @@ switch (menuID) {
 			return true;
 			...
 }
-<% endhighlight %>
+{% endhighlight %}
 
 这里再多说两句，`MultiChatContactActivity`的设计中，通过`mode`来实现**复用类的制定化**
 
-<% highlight java %>
+{% highlight java %}
 public void onCreate(Bundle savedInstanceState) {
 		...
 		//通过mode来实现定制化
@@ -116,7 +116,7 @@ public void onCreate(Bundle savedInstanceState) {
 		tagLocation = MultiChatUtil.getInstance().getTagLocation();
 		...
 }
-<% endhighlight %>
+{% endhighlight %}
 
 #### 何时销毁数据
 
@@ -124,13 +124,13 @@ public void onCreate(Bundle savedInstanceState) {
 
 2. MultiChatUtil的数据在使用完复用类`MultiChatContactActivity`之后就应该销毁。
 
-<% highlight java %>
+{% highlight java %}
 
 protected void onDestroy() {
 		super.onDestroy();
 		MultiChatUtil.getInstance().setListData(null);
 		MultiChatUtil.getInstance().setTagLocation(null);
 	}
-<% endhighlight %>
+{% endhighlight %}
 
 EOF
