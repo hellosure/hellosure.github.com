@@ -133,4 +133,4 @@ protected void onDestroy() {
 }
 {% endhighlight %}
 
-EOF
+-EOF-
