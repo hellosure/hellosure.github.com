@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 通过单例模式共享数据
+title: 一种通过单例模式共享数据的方法
 category: Android
 tags: [Android,Java,设计模式,单例,共享,可定制化复用类]
 ---
