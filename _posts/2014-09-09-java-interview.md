@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 当面试官时问的题目
+title: 当面试官时问过的题目
 category: Java
 tags: [Java,MySQL,J2EE,linux,面试]
 ---
