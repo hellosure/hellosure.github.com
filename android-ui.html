@@ -1,23 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Android-UI-pattens</title>
+  <!-- In production, only one script (pdf.js) is necessary -->
+  <!-- In production, change the content of PDFJS.workerSrc below -->
+  <script src="assets/js/pdfjs/util.js"></script>
+  <script src="assets/js/pdfjs/api.js"></script>
+  <script src="assets/js/pdfjs/metadata.js"></script>
+  <script src="assets/js/pdfjs/canvas.js"></script>
+  <script src="assets/js/pdfjs/webgl.js"></script>
+  <script src="assets/js/pdfjs/pattern_helper.js"></script>
+  <script src="assets/js/pdfjs/font_loader.js"></script>
+  <script src="assets/js/pdfjs/annotation_helper.js"></script>
 
-<script type="text/javascript" src="/assets/js/pdfobject.min.js"></script>
-
-<script type="text/javascript">
-
-window.onload = function (){
-
-	var success = new PDFObject({ url: "https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_attach/android-ui-pattens.pdf" }).embed("pdf");
-	
-};
-</script>
+  <script>
+    // Specify the main script used to create a new PDF.JS web worker.
+    // In production, leave this undefined or change it to point to the
+    // combined `pdf.worker.js` file.
+    PDFJS.workerSrc = 'assets/js/pdfjs/worker_loader.js';
+  </script>
+  <script src="assets/js/pdfjs/case/android-ui.js"></script>
 </head>
 
 <body>
-<div id="pdf">It appears you don't have Adobe Reader or PDF support in this web browser. <a href="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_attach/android-ui-pattens.pdf">Click here to download the PDF</a></div>
-
+  <canvas id="the-canvas" style="border:1px solid black;"/>
 </body>
+
 </html>
