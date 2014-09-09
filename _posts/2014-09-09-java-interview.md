@@ -63,12 +63,19 @@ tags: [Java,MySQL,J2EE,linux,面试]
     
 #### 同步 [多线程]
 
-synchrionized:
+`synchrionized`:
 
 1. 静态：类锁
 2. 方法：对象锁
 3. 块：任意对象锁
 
 #### 阻塞 [多线程]
+
+`sleep()` 阻塞(CPU不可分配) -> 到时可执行(CPU可分配)
+但是注意，sleep并不释放锁！
+
+`yield()` 放弃CPU，CPU再重新调度一次
+
+
 
 
