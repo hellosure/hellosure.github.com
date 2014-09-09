@@ -17,23 +17,23 @@ title: HelloSure
       <a style="color: #38B738; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 18px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
       
-      {% if tag[1].size == 2 %}
+      {% if tag[1].size <= 3 %}
       <a style="color: #0066FF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 25px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
       
-      {% if tag[1].size == 3 %}
+      {% if tag[1].size <= 5 %}
       <a style="color: #9900CC; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 32px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
       
-      {% if tag[1].size == 4 %}
+      {% if tag[1].size <= 7 %}
       <a style="color: #FF6666; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 40px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
       
-      {% if tag[1].size == 5 %}
+      {% if tag[1].size <= 9 %}
       <a style="color: #6666FF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 48px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
       
-      {% if tag[1].size > 5 %}
+      {% if tag[1].size > 10 %}
       <a style="color: #FFCC00; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 56px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
     </li>
