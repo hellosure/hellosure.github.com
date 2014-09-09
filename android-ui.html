@@ -2,12 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Embedding a PDF using PDFObject: Simplest example!</title>
-
-<!-- This example created for PDFObject.com by Philip Hutchison (www.pipwerks.com) -->
-
-<!-- CSS for basic page styling, not related to example -->
-<link href="/css/examples.css" rel="stylesheet" type="text/css" />
+<title>Android-UI-pattens</title>
 
 <script type="text/javascript" src="/assets/js/pdfobject.min.js"></script>
 
@@ -15,7 +10,7 @@
 
 window.onload = function (){
 
-	var success = new PDFObject({ url: "/_attach/android-ui-pattens.pdf" }).embed("pdf");
+	var success = new PDFObject({ url: "https://github.com/hellosure/hellosure.github.com/blob/master/_attach/android-ui-pattens.pdf?raw=true" }).embed("pdf");
 	
 };
 
@@ -23,10 +18,7 @@ window.onload = function (){
 </head>
 
 <body>
-<h1>Embedding a PDF using PDFObject: Simplest example!</h1>
-<p>This example uses one line of JavaScript wrapped in a <em>window.onload</em> statement.</p>
-
-<div id="pdf">It appears you don't have Adobe Reader or PDF support in this web browser. <a href="/_attach/android-ui-pattens.pdf">Click here to download the PDF</a></div>
+<div id="pdf">It appears you don't have Adobe Reader or PDF support in this web browser. <a href="https://github.com/hellosure/hellosure.github.com/blob/master/_attach/android-ui-pattens.pdf?raw=true">Click here to download the PDF</a></div>
 
 <p><a href="/index.html">&laquo; Return to blog home</a></p>
 
