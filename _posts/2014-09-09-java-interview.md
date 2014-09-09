@@ -150,5 +150,115 @@ String中有这样两个重载方法：
 
 #### 集合 [多线程]
 
+`hashtable`和`synchronizedMap`是同步，线程安全。
+但是有并发性问题：同步在单个锁，一次只有一个线程可以访问集合。
+`concurrentHashMap`解决了这个并发问题：
+1. 读支持完全并发，value是volatile
+2. 支持一定程度的并发写，分段segment相当一个`hashtable`，相当于有分段写锁。
 
-    
+#### 队列 [多线程]
+
+`BlockingQueue`是阻塞队列，使用可重入锁`ReentrantLock`
+`ConcurrentLinkedQueue`是非阻塞队列，无锁，使用非阻塞算法
+
+#### 池 [Java基础]
+
+设计一个线程池、连接池
+
+#### 动态代理 [Java基础]
+
+1. JDK动态代理
+2. CGLIB
+
+#### 反射 [Java基础]
+
+动态语言特性，**运行期**
+
+#### 异常与错误 [Java基础]
+
+1. Error，退出
+2. Exception，受检查异常、运行时异常
+
+#### final对象 [Java基础]
+
+引用不可变，但是内存可变
+
+#### HashSet [Java基础]
+
+`HashSet`是由`HashMap`实现的
+
+#### 默认运行模式 [设计模式]
+
+interface - abstract class - class
+
+#### NIO [并发]
+
+非阻塞IO，channel - buffer
+
+#### HTTP [web]
+
+HTTP长短连接
+HTTP head信息
+
+#### ORM [J2EE]
+
+为什么要用ORM框架
+延迟加载：提升速度，节省内存
+
+#### 数据库大数据量 [数据库优化]
+
+拆分表，索引
+
+#### SQL例子 [SQL]
+
+表为student(id,class,score)，班级平均分小于60的班级：
+
+    select class from student group by class having avg(score)<60;
+
+#### cookie和session [HTTP]
+
+HTTP无状态
+1. cookie，客户端
+2. session，用于在客户端和服务端保持状态，在客户端需要cookie的配合
+
+#### 内部类 [Java基础]
+
+非静态的内部类有外部类的引用，包括私有变量。
+在外部类之外创建内部类，需要先创建外部对象。
+
+#### 同步 [JMM]
+
+`volatile` 从主存读取最新值
+`ThreadLocal` 数据存于各线程栈
+`ReentrantLock`的同步比`synchronized`慢，另外前者用与同步激烈时，后者用于同步不激烈时。
+
+#### 序列化 [Java基础]
+
+`transient` 字段不序列化
+
+#### 泛型 [Java基础]
+
+类型擦除，用Object代替。
+在编译器就会将泛型擦除，字节码中不包括泛型。
+
+#### 排序 [算法]
+
+1. 稳定：冒泡、插入、归并
+2. 不稳定：选择、快速、堆
+
+#### 算法设计题
+
+一个词典，每条是字符串，该词典条目可能有非常多。
+现在要求设计一种算法，要求将每个字符串与整型一一映射，满足这样两个要求：
+1. 从字符串到整型，以及从整型到字符串，都可以 O(1) 找到对方
+2. 插入方便，空间复杂度低。
+
+思考过程：
+
+    O(1)可以联想到哈希算法。
+    整型是个很好的信息，可以联想到内存地址。
+    那么设计hashcode算法，将字符串可以映射到hash值，直接作为内存地址。
+    这样知道字符串可以求哈希值找到整型，知道整型可以从内存中找到字符串，都是O(1)。
+    从插入方便，可以想到链表。
+
+-EOF-
