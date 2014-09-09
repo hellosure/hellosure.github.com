@@ -11,7 +11,7 @@ tags: [Android,UI patten]
 
 ### 中文翻译
 
-[Android UI设计模式-在线阅读](http://view.samurajdata.se/psview.php?id=2ecc5fb0&page=1&all=1)
+[Android UI设计模式-在线阅读](http://hellosure.github.io/android-ui.html)
 
 [Android UI设计模式-下载](https://github.com/hellosure/hellosure.github.com/blob/master/_attach/android-ui-pattens.pdf?raw=true)      
 
