@@ -76,23 +76,23 @@ function init(){
 	ctx.font="bold 40px HirakakuProN-W6";	//绘制字体还原
 	ctx.fillStyle="#FFFFFF";
 	upbackground=new Image();
-	upbackground.src="_image/background.png";
+	upbackground.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/background.png";
 	bottombackground=new Image();
-	bottombackground.src="_image/ground.png";
+	bottombackground.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/ground.png";
 	bottomstate=1;
 	birdimage=new Image();
-	birdimage.src="_image/bird.png";
+	birdimage.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/bird.png";
 	birdstate=1;
 	tipimage=new Image();
-	tipimage.src="_image/space_tip.png";
+	tipimage.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/space_tip.png";
 	boardimage=new Image();
-	boardimage.src="_image/scoreboard.png";
+	boardimage.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/scoreboard.png";
 	boardx=(backgroundwidth-boardwidth)/2;
 	///////////////////
 	pipeupimage=new Image();
-	pipeupimage.src="_image/pipeup.png";
+	pipeupimage.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/pipeup.png";
 	pipedownimage=new Image();
-	pipedownimage.src="_image/pipedown.png";
+	pipedownimage.src="https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_image/pipedown.png";
 	/////////////////////
 	times=Math.ceil(boxwidth/groundwidth)+1;
 	initPipe();
@@ -328,7 +328,7 @@ function checkBird(){
 	//通过了一根管道加一分
 	if(birdx>pipeoncanvas[0][0]&&birdx<pipeoncanvas[0][0]+movespeed
 		||birdx>pipeoncanvas[1][0]&&birdx<pipeoncanvas[1][0]+movespeed){
-		playSound(scoresound,"_sound/point.mp3");
+		playSound(scoresound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/point.mp3");
 		score++;
 	}
 	//先判断第一组管道
@@ -360,8 +360,8 @@ function hitPipe(){
 	ctx.font="bold 40px HirakakuProN-W6";
 	//ctx.font="bold 35px HarlemNights";	
 	ctx.fillStyle="#000000";
-	playSound(hitsound,"_sound/hit.mp3");
-	playSound(deadsound,"_sound/die.mp3");
+	playSound(hitsound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/hit.mp3");
+	playSound(deadsound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/die.mp3");
 	updateScore();
 	gamestate=2;	//游戏结束
 }
@@ -375,12 +375,12 @@ function updateScore(){
 //处理键盘事件
 function keyDown(){
 	if(gamestate==0){
-		playSound(swooshingsound,"_sound/swooshing.mp3");
+		playSound(swooshingsound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/swooshing.mp3");
 		birdvy=-jumpvelocity;
 		gamestate=1;
 	}
 	else if(gamestate==1){
-		playSound(flysound,"_sound/wing.mp3");
+		playSound(flysound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/wing.mp3");
 		birdvy=-jumpvelocity;
 	}
 }
@@ -397,12 +397,12 @@ function mouseDown(ev){
     	my = ev.offsetY;
   	}
 	if(gamestate==0){
-		playSound(swooshingsound,"_sound/swooshing.mp3");
+		playSound(swooshingsound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/swooshing.mp3");
 		birdvy=-jumpvelocity;
 		gamestate=1;
 	}
 	else if(gamestate==1){
-		playSound(flysound,"_sound/wing.mp3");
+		playSound(flysound,"https://raw.githubusercontent.com/hellosure/hellosure.github.com/master/_sound/wing.mp3");
 		birdvy=-jumpvelocity;
 	}
 	//游戏结束后判断是否点击了重新开始
