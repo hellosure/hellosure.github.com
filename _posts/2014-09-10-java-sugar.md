@@ -2,7 +2,7 @@
 layout: post
 title: Java中的语法糖
 category: Java
-tags: [Java,包装,enum]
+tags: [Java,泛型,enum]
 ---
 
 ### 语法糖
@@ -20,18 +20,21 @@ tags: [Java,包装,enum]
         List<String> stringList = new ArrayList<String>();  
         stringList.add("oliver");  
         System.out.println(stringList.get(0));  
-    }  
+    }
+    
 {% endhighlight %}
 
 将上面的代码的字节码反编译后：
 
 {% highlight java %}
+
     public static void main(String args[])  
     {  
         List stringList = new ArrayList();  
         stringList.add("oliver");  
         System.out.println((String)stringList.get(0));  
     } 
+    
 {% endhighlight %}
 
 ### 自动拆箱/装箱
@@ -43,11 +46,13 @@ tags: [Java,包装,enum]
 需要注意的是：包装类型的“==”运算在没有遇到算数运算符的情况下不会自动拆箱，而其包装类型的equals()方法不会处理数据类型转换，所以：
 
 {% highlight java %}
+
     Integer a = 1;  
     Integer b = 1;  
     Long c = 1L;  
     System.out.println(a == b);  
     System.out.println(c.equals(a));  
+    
 {% endhighlight %}
 
 这样的代码应该尽量避免自动拆箱与装箱。
@@ -55,21 +60,25 @@ tags: [Java,包装,enum]
 ### 循环历遍（foreach）
 
 {% highlight java %}
+
     List<Integer> list = new ArrayList<Integer>();  
     for(Integer num : list){  
         System.out.println(num);  
     }  
+    
 {% endhighlight %}
 
 Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，foreach迭代也是调用底层的迭代器实现的。反编译上面源码的字节码：
 
 {% highlight java %}
+
     List list = new ArrayList();  
     Integer num;  
     Integer num;  
     for (Iterator iterator = list.iterator(); iterator.hasNext(); System.out.println(num)){  
         num = (Integer) iterator.next();  
-    }  
+    } 
+    
 {% endhighlight %}
 
 ### 枚举
@@ -80,14 +89,17 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 看下面一个枚举类：
 
 {% highlight java %}
+
     public enum EnumTest {  
         OLIVER,LEE;  
     }  
+    
 {% endhighlight %}
 
 反编译字节码后：
 
 {% highlight java %}
+
     public final class EnumTest extends Enum {  
       
         private EnumTest(String s, int i) {  
@@ -117,6 +129,7 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
             ENUM$VALUES = (new EnumTest[] { OLIVER, LEE });  
         }  
     } 
+    
 {% endhighlight %}
 
 ### 变长参数
@@ -126,18 +139,22 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 对于这个方法：
 
 {% highlight java %}
+
     public void foo(String str,Object...args){  
       
     }  
+    
 {% endhighlight %}
 
 我们可以这样调用：
 
 {% highlight java %}
+
     foo("oliver");  
     foo("oliver",new Object());  
     foo("oliver",new Integer(1),"sss");  
     foo("oliver",new ArrayList(),new Object(),true,1);  
+    
 {% endhighlight %}
 
 参数args可以是任意多个。
