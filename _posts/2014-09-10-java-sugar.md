@@ -16,11 +16,11 @@ tags: [Java,泛型,enum]
 
 {% highlight java %}
 
-    public static void main(String[] args) {  
-        List<String> stringList = new ArrayList<String>();  
-        stringList.add("oliver");  
-        System.out.println(stringList.get(0));  
-    }
+public static void main(String[] args) {  
+    List<String> stringList = new ArrayList<String>();  
+    stringList.add("oliver");  
+    System.out.println(stringList.get(0));  
+}
     
 {% endhighlight %}
 
@@ -28,12 +28,12 @@ tags: [Java,泛型,enum]
 
 {% highlight java %}
 
-    public static void main(String args[])  
-    {  
-        List stringList = new ArrayList();  
-        stringList.add("oliver");  
-        System.out.println((String)stringList.get(0));  
-    } 
+public static void main(String args[])  
+{  
+    List stringList = new ArrayList();  
+    stringList.add("oliver");  
+    System.out.println((String)stringList.get(0));  
+} 
     
 {% endhighlight %}
 
@@ -47,11 +47,11 @@ tags: [Java,泛型,enum]
 
 {% highlight java %}
 
-    Integer a = 1;  
-    Integer b = 1;  
-    Long c = 1L;  
-    System.out.println(a == b);  
-    System.out.println(c.equals(a));  
+Integer a = 1;  
+Integer b = 1;  
+Long c = 1L;  
+System.out.println(a == b);  
+System.out.println(c.equals(a));  
     
 {% endhighlight %}
 
@@ -61,10 +61,10 @@ tags: [Java,泛型,enum]
 
 {% highlight java %}
 
-    List<Integer> list = new ArrayList<Integer>();  
-    for(Integer num : list){  
-        System.out.println(num);  
-    }  
+List<Integer> list = new ArrayList<Integer>();  
+for(Integer num : list){  
+    System.out.println(num);  
+}  
     
 {% endhighlight %}
 
@@ -72,12 +72,12 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 
 {% highlight java %}
 
-    List list = new ArrayList();  
-    Integer num;  
-    Integer num;  
-    for (Iterator iterator = list.iterator(); iterator.hasNext(); System.out.println(num)){  
-        num = (Integer) iterator.next();  
-    } 
+List list = new ArrayList();  
+Integer num;  
+Integer num;  
+for (Iterator iterator = list.iterator(); iterator.hasNext(); System.out.println(num)){  
+    num = (Integer) iterator.next();  
+} 
     
 {% endhighlight %}
 
@@ -90,9 +90,9 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 
 {% highlight java %}
 
-    public enum EnumTest {  
-        OLIVER,LEE;  
-    }  
+public enum EnumTest {  
+    OLIVER,LEE;  
+}  
     
 {% endhighlight %}
 
@@ -100,35 +100,35 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 
 {% highlight java %}
 
-    public final class EnumTest extends Enum {  
+public final class EnumTest extends Enum {  
       
-        private EnumTest(String s, int i) {  
-            super(s, i);  
-        }  
+    private EnumTest(String s, int i) {  
+        super(s, i);  
+    }  
       
-        public static EnumTest[] values() {  
-            EnumTest aenumtest[];  
-            int i;  
-            EnumTest aenumtest1[];  
-            System.arraycopy(aenumtest = ENUM$VALUES, 0,  
+    public static EnumTest[] values() {  
+        EnumTest aenumtest[];  
+        int i;  
+        EnumTest aenumtest1[];  
+        System.arraycopy(aenumtest = ENUM$VALUES, 0,  
                     aenumtest1 = new EnumTest[i = aenumtest.length], 0, i);  
             return aenumtest1;  
-        }  
+    }  
       
-        public static EnumTest valueOf(String s) {  
-            return (EnumTest) Enum.valueOf(EnumTest, s);  
-        }  
+    public static EnumTest valueOf(String s) {  
+        return (EnumTest) Enum.valueOf(EnumTest, s);  
+    }  
       
-        public static final EnumTest OLIVER;  
-        public static final EnumTest LEE;  
-        private static final EnumTest ENUM$VALUES[];  
+    public static final EnumTest OLIVER;  
+    public static final EnumTest LEE;  
+    private static final EnumTest ENUM$VALUES[];  
       
-        static {  
-            OLIVER = new EnumTest("OLIVER", 0);  
-            LEE = new EnumTest("LEE", 1);  
-            ENUM$VALUES = (new EnumTest[] { OLIVER, LEE });  
-        }  
-    } 
+    static {  
+        OLIVER = new EnumTest("OLIVER", 0);  
+        LEE = new EnumTest("LEE", 1);  
+        ENUM$VALUES = (new EnumTest[] { OLIVER, LEE });   
+    }  
+} 
     
 {% endhighlight %}
 
@@ -140,9 +140,9 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 
 {% highlight java %}
 
-    public void foo(String str,Object...args){  
+public void foo(String str,Object...args){  
       
-    }  
+}  
     
 {% endhighlight %}
 
@@ -150,10 +150,10 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 
 {% highlight java %}
 
-    foo("oliver");  
-    foo("oliver",new Object());  
-    foo("oliver",new Integer(1),"sss");  
-    foo("oliver",new ArrayList(),new Object(),true,1);  
+foo("oliver");  
+foo("oliver",new Object());  
+foo("oliver",new Integer(1),"sss");  
+foo("oliver",new ArrayList(),new Object(),true,1);  
     
 {% endhighlight %}
 
@@ -162,9 +162,9 @@ Foreach要求被历遍的对象要实现Iterable接口，由此可想而知，fo
 其实，在编译阶段，args是会被编译成Object [] args。
 
 {% highlight java %}
-    public transient void foo(String s, Object aobj[])  
-    {  
-    }  
+public transient void foo(String s, Object aobj[])  
+{  
+}  
 {% endhighlight %}
 
 这样，变长参数就可以实现了。
