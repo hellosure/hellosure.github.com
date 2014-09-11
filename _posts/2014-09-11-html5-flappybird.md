@@ -5,7 +5,9 @@ category: HTML5
 tags: [HTML5,JavaScript]
 ---
 
-[在线试玩flappybird](http://hellosure.github.io/flappybird.html)
+### 在线试玩
+
+[flappybird](http://hellosure.github.io/flappybird.html)
 
 ### 游戏整体框架的搭建
 
@@ -227,6 +229,294 @@ function drawAllPipe(){
 这里会先判断第一根管道是否已经移出画布，如果移出了画布则后面的管道数据向前顺延，并将新的管道高度读入第三根管道，处理完后按顺序意思绘制三根管道。
 
 基本场景绘制结束。
+
+### 鸟的绘制
+
+这里的鸟有一个扇翅膀的动作，我拿到的图片是三个动作连在一起的，因此需要对图片进行裁剪，每次使用1/3，用状态量需要记录下鸟当前的翅膀状态，并根据状态决定下一帧的绘制，代码如下：
+
+{% highlight javascript %}
+function drawBird(){
+  birdy=birdy+birdvy;
+  if(birdstate==1||birdstate==2||birdstate==3){
+    ctx.drawImage(birdimage,0,0,92,64,birdx,birdy,birdwidth,birdheight);
+    birdstate++;
+  }
+  else if(birdstate==4||birdstate==5||birdstate==6){
+    ctx.drawImage(birdimage,92,0,92,64,birdx,birdy,birdwidth,birdheight);
+    birdstate++;
+  }
+  else if(birdstate==7||birdstate==8||birdstate==9){
+    ctx.drawImage(birdimage,184,0,92,64,birdx,birdy,birdwidth,birdheight);
+    birdstate++;
+    if(birdstate==9) birdstate=1;
+  }
+}
+{% endhighlight %}
+
+在反复尝试后，这里我选择3帧改变一次翅膀的位置，每帧状态量加1。
+这里有必要说一下`drawImage`这个函数，在使用9个参数的时候，第2-5个参数可以指定位置和宽高对图片进行裁剪，有兴趣的同学可以去查一下相关的资料。
+
+游戏开始时需要设定鸟的初始位置。要让鸟移动起来，还要给鸟添加纵向的速度值，在游戏开始时这个值会是0。
+
+{% highlight javascript %}
+  birdy=birdy+birdvy;
+  birdvy=birdvy+gravity;
+{% endhighlight %}
+
+每一帧鸟的位置都是由上一帧的位置加上速度决定的，在运行过程中每一帧速度都会减去重力值（由我设定的），在检测到用户输入会赋给鸟一个固定的速度（后面会提到），形成了跳跃的动作。
+至此，我们在一帧中已经绘制了基本场景和鸟，下面是碰撞检测。
+
+### 碰撞检测
+
+这里我们需要依次检测鸟是否与管道以及地面发生碰撞。
+
+{% highlight javascript %}
+function checkBird(){
+  //先判断第一组管道
+  //如果鸟在x轴上与第一组管道重合
+  if(birdx+birdwidth>pipeoncanvas[0][0]&&birdx+birdwidth<pipeoncanvas[0][0]+pipewidth+birdwidth){
+    //如果鸟在y轴上与第一组管道上部或下部重合
+    if(birdy<backgroundheight-pipeoncanvas[0][1]-blankwidth||birdy+birdheight>backgroundheight-pipeoncanvas[0][1])
+      gamestate=2;	//游戏结束
+    }
+  //判断第二组管道
+  //如果鸟在x轴上与第二组管道重合
+  else if(birdx+birdwidth>pipeoncanvas[1][0]&&birdx+birdwidth<pipeoncanvas[1][0]+pipewidth+birdwidth){
+    //如果鸟在y轴上与第二组管道上部或下部重合
+    if(birdy<backgroundheight-pipeoncanvas[1][1]-blankwidth||birdy+birdheight>backgroundheight-pipeoncanvas[1][1])
+      gamestate=2;	//游戏结束
+    }
+  //判断是否碰撞地面
+  if(birdy+birdheight>backgroundheight)
+    gamestate=2;		//游戏结束
+}
+{% endhighlight %}
+
+这里的注释比较详细，我简单解释一下，判断会先看鸟在x轴上是否与某一管道有重合，如果有则再检测y轴上是否有重合，两项都符合则游戏结束。地面则较为简单。
+
+### 添加键盘和鼠标控制
+
+想要在HTML中读取用户输入，需要在init中增加监听事件:
+
+{% highlight javascript %}
+  canvas.addEventListener("mousedown",mouseDown,false);
+  window.addEventListener("keydown",keyDown,false);
+{% endhighlight %}
+
+mousedow字段监听鼠标按下事件并调用`mouseDown`函数，keydown字段监听按键事件并调用`keyDown`函数。
+这两个函数定义如下: 
+
+{% highlight javascript %}
+//处理键盘事件
+function keyDown(){
+  if(gamestate==0){
+    playSound(swooshingsound,"sounds/swooshing.mp3");
+    birdvy=-jumpvelocity;
+    gamestate=1;
+  }
+  else if(gamestate==1){
+    playSound(flysound,"sounds/wing.mp3");
+    birdvy=-jumpvelocity;
+  }
+}
+{% endhighlight %}
+
+键盘不区分按下的键，会给将鸟的速度变为一个设定的值（jumpvelocity）
+
+{% highlight javascript %}
+function mouseDown(ev){
+  var mx;			//存储鼠标横坐标
+  var my;			//存储鼠标纵坐标
+  if ( ev.layerX ||  ev.layerX == 0) { // Firefox
+    mx= ev.layerX;
+    my = ev.layerY;
+  } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+    mx = ev.offsetX;
+    my = ev.offsetY;
+  }
+  if(gamestate==0){
+    playSound(swooshingsound,"sounds/swooshing.mp3");
+    birdvy=-jumpvelocity;
+    gamestate=1;
+  }
+  else if(gamestate==1){
+    playSound(flysound,"sounds/wing.mp3");
+    birdvy=-jumpvelocity;
+  }
+  //游戏结束后判断是否点击了重新开始
+  else if(gamestate==2){
+    //鼠标是否在重新开始按钮上
+    if(mx>boardx+14&&mx<boardx+89&&my>boardy+boardheight-40&&my<boardy+boardheight){
+      playSound(swooshingsound,"sounds/swooshing.mp3");
+      restart();
+    }
+  }
+}
+{% endhighlight %}
+
+### 增加计分，添加开始提示和结束积分板
+
+计分的实现比较简单，使用一全局变量即可，在每次通过管道时分数加1，并根据全局变量的值将分数绘制在画布上。
+
+{% highlight javascript %}
+var highscore=0;		//得到过的最高分
+var score=0				//目前得到的分数
+//通过了一根管道加一分
+if(birdx+birdwidth>pipeoncanvas[0][0]-movespeed/2&&birdx+birdwidth<pipeoncanvas[0][0]+movespeed/2
+  ||birdx+birdwidth>pipeoncanvas[1][0]-movespeed/2&&birdx+birdwidth<pipeoncanvas[1][0]+movespeed/2){
+    playSound(scoresound,"sounds/point.mp3");
+    score++;
+}
+
+function drawScore(){
+  ctx.fillText(score,boxwidth/2-2,120);
+}
+{% endhighlight %}
+
+在绘制文本之前需要先指定字体和颜色:
+    
+    	ctx.font="bold 40px HarlemNights";			//设置绘制分数的字体 
+	ctx.fillStyle="#FFFFFF";
+
+开始时的提示和结束的计分板都是普通的图片，计分板上用两个文本绘制了当前分数和得到的最高分数
+
+{% highlight javascript %}
+function drawTip(){
+  ctx.drawImage(tipimage,birdx-57,birdy+birdheight+10,tipwidth,tipheight);	
+}
+
+//绘制分数板
+function drawScoreBoard(){
+  //绘制分数板
+  ctx.drawImage(boardimage,boardx,boardy,boardwidth,boardheight);	
+  //绘制当前的得分
+  ctx.fillText(score,boardx+140,boardheight/2+boardy-8);//132
+  //绘制最高分
+  ctx.fillText(highscore,boardx+140,boardheight/2+boardy+44);//184
+}
+{% endhighlight %}
+
+这里的最高分highscroe会在每次游戏结束时更新
+
+{% highlight javascript %}
+//刷新最好成绩
+function updateScore(){
+  if(score>highscore)
+    highscore=score;
+}
+{% endhighlight %}
+
+### 给鸟添加俯仰动作，添加音效
+
+我察觉到鸟的动作还不是非常丰富，有必要给鸟添加上仰、俯冲的动作使其更富动感。代码如下：
+
+{% highlight javascript %}
+function drawBird(){
+  birdy=birdy+birdvy;
+  if(gamestate==0){
+    drawMovingBird();
+  }
+  //根据鸟的y轴速度来判断鸟的朝向,只在游戏进行阶段生效
+  else if(gamestate==1){
+    ctx.save();
+    if(birdvy<=8){
+      ctx.translate(birdx+birdwidth/2,birdy+birdheight/2);
+      ctx.rotate(-Math.PI/6);
+      ctx.translate(-birdx-birdwidth/2,-birdy-birdheight/2);	
+    }
+    if(birdvy>8&&birdvy<=12){
+      ctx.translate(birdx+birdwidth/2,birdy+birdheight/2);
+      ctx.rotate(Math.PI/6);
+      ctx.translate(-birdx-birdwidth/2,-birdy-birdheight/2);	
+    }
+    if(birdvy>12&&birdvy<=16){
+      ctx.translate(birdx+birdwidth/2,birdy+birdheight/2);
+      ctx.rotate(Math.PI/3);
+      ctx.translate(-birdx-birdwidth/2,-birdy-birdheight/2);	
+    }
+    if(birdvy>16){
+      ctx.translate(birdx+birdwidth/2,birdy+birdheight/2);
+      ctx.rotate(Math.PI/2);
+      ctx.translate(-birdx-birdwidth/2,-birdy-birdheight/2);	
+    }
+    drawMovingBird();
+    ctx.restore();
+  }
+  //游戏结束后鸟头向下并停止活动
+  else if(gamestate==2){
+    ctx.save();
+    ctx.translate(birdx+birdwidth/2,birdy+birdheight/2);
+    ctx.rotate(Math.PI/2);
+    ctx.translate(-birdx-birdwidth/2,-birdy-birdheight/2);	
+    ctx.drawImage(birdimage,0,0,92,64,birdx,birdy,birdwidth,birdheight);
+    ctx.restore();
+  }
+}
+{% endhighlight %}
+
+这里使用了图片的旋转操作。过程是保存绘画状态，将绘画原点移到鸟的中心，旋转一定的角度，将原点移回原位（防止影响其他物体的绘制），恢复绘画状态：
+
+旋转的角度我根据鸟当前的速度来判断，birdvy<=8时向上旋转30度，8<birdvy<=12时向下旋转30度，12<birdvy<=16时向下旋转60度，birdvy>16时向下旋转90度，在确定了旋转角度后再使用之前的方法进行鸟的绘制，这样就同时实现了鸟的俯仰和扇动翅膀。
+
+#### 音效
+
+关于在HTML中使用音效，我查阅了许多资料，经过反复试验后，排除了许多效果不佳的方法，最终选择使用audio这个HTML标签来实现音效的播放。
+要使用audio标签，首先要在HTML的body部分定义：
+
+{% highlight html %}
+<audio id="flysound" playcount="1" autoplay="true" src="">
+Your browser doesn't support the HTML5 element audio.
+</audio>
+<audio id="scoresound" playcount="1" autoplay="true" src="">
+Your browser doesn't support the HTML5 element audio.
+</audio>
+<audio id="hitsound" playcount="1" autoplay="true" src="">
+Your browser doesn't support the HTML5 element audio.
+</audio>
+<audio id="deadsound" playcount="1" autoplay="true" src="">
+Your browser doesn't support the HTML5 element audio.
+</audio>
+<audio id="swooshingsound" playcount="1" autoplay="true" src="">
+Your browser doesn't support the HTML5 element audio.
+</audio>
+{% endhighlight %}
+
+为了时播放音效时不发生冲突，我为每个音效定义了一个audio标签，这样在使用中就不会出现问题。
+然后将定义的变量与标签绑定：
+
+{% highlight javascript %}
+//各种音效
+var flysound;		//飞翔的声音
+var scoresound;		//得分的声音
+var hitsound;		//撞到管道的声音
+var deadsound;		//死亡的声音
+var swooshingsound;		//切换界面时的声音
+function init(){
+  flysound = document.getElementById('flysound');
+  scoresound = document.getElementById('scoresound');
+  hitsound = document.getElementById('hitsound');
+  deadsound = document.getElementById('deadsound');
+  swooshingsound = document.getElementById('swooshingsound');
+}
+{% endhighlight %}
+
+再定义用来播放音效的函数
+
+{% highlight javascript %}
+function playSound(sound,src){
+  if(src!='' && typeof src!=undefined){
+    sound.src = src;
+  }
+}
+{% endhighlight %}
+
+函数的两个参数分别指定了要使用的标签和声音文件的路径，接下来只要在需要播放音效的地方调用这个函数并指定声音文件就行了，比如
+
+    playSound(flysound,"sounds/wing.mp3"); 
+    
+这里在点击键盘按键且游戏正在运行的时候使鸟跳跃，并播放扇动翅膀的音效。
+
+
 
 
 -EOF-
