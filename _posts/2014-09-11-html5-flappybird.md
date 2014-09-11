@@ -19,7 +19,7 @@ tags: [HTML5,JavaScript]
 
 #### canvas
 
-大多数 Canvas 绘图 API 都没有定义在 <canvas> 元素本身上，而是定义在通过画布的 getContext() 方法获得的一个“绘图环境”对象上。
+大多数 Canvas 绘图 API 都没有定义在 `<canvas>` 元素本身上，而是定义在通过画布的 `getContext()` 方法获得的一个“绘图环境”对象上。
 
 如何通过 canvas 元素来显示一个红色的矩形：
 
