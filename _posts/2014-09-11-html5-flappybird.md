@@ -28,7 +28,40 @@ function init(){
   setInterval(run, 1000/fps);
 }
 {% endhighlight %}
+
 游戏主逻辑`run()`将会以每秒fps帧的速度运行，这和后面绘制移动物体有关。
+
+{% highlight javascript %}
+//游戏的主要逻辑及绘制  
+function run(){  
+  //游戏未开始  
+  if(gamestate==0){  
+    drawBeginScene();   //绘制开始场景  
+    drawBird();         //绘制鸟  
+    drawTip();          //绘制提示  
+  }  
+  //游戏进行中  
+  if(gamestate==1){  
+      birdvy=birdvy+gravity;  
+      drawScene();        //绘制场景  
+      drawBird();         //绘制鸟  
+      drawScore();        //绘制分数  
+      checkBird();        //检测鸟是否与物体发生碰撞  
+  }  
+  //游戏结束  
+  if(gamestate==2){  
+    if(birdy+birdheight<backgroundheight)    //如果鸟没有落地  
+      birdvy=birdvy+gravity;  
+    else {  
+      birdvy=0;  
+      birdy=backgroundheight-birdheight;  
+    }  
+    drawEndScene();     //绘制结束场景  
+    drawBird();         //绘制鸟  
+    drawScoreBoard();   //绘制分数板  
+  }  
+} 
+{% endhighlight %}
 
 还有一些全局变量的设置
 {% highlight javascript %}
