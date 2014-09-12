@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 装修建材行业竞品分析
-category: 行业
-tags: [竞品分析]
+category: 创业
+tags: [创业,竞品分析]
 ---
 
 ### [海尔家居有住网](http://youzhu.com/)
