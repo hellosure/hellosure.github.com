@@ -5,8 +5,7 @@ category: 行业
 tags: [竞品分析]
 ---
 
-### 海尔家居有住网  
-<http://youzhu.com/>
+### [海尔家居有住网](http://youzhu.com/)
 
 ####	[有住商城](http://www.youzhu.com/ecshop/)
 
@@ -41,24 +40,16 @@ tags: [竞品分析]
 +	[选择百变加的理由](http://youzhu.com/Index/reason)
 
 1.	一线品牌
-
 汇聚国内外一线大牌部品和建材供应商，品质保障
-
 2.	APP监工
-
 随时随地用手机查看家里装修施工进度
- 
 3.	45天工期
-
 45天内完成施工，全部采用环保建材，可立即入住
 [施工进程表](http://youzhu.com/Public/images/standard_process.xlsx)
-
 4.	最高性价比
-
 零利润，一口价，挑战国内家装价格底限
 A套餐：产权面积小于80平方米，一口价47900元。
 B套餐：产权面积大于等于80平方米，599元/平方米*产权面积。
-
 5.	[预约百变加](http://www.youzhu.com/Index/yuyue)
 
 
