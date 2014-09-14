@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 几款APP制作工具评测
-category: Android
-tags: [Android,创业]
+category: APP
+tags: [APP,创业]
 ---
 
 ### 写在前面
