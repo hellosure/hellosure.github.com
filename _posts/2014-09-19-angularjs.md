@@ -7,24 +7,20 @@ tags: [Angular,JavaScript]
 
 ### 搭建学习环境
 
-+ 安装[node.js](http://nodejs.org/)
+安装[node.js](http://nodejs.org/)
 
-+ 安装[karma](http://karma-runner.github.io/0.12/index.html) 
+安装[karma](http://karma-runner.github.io/0.12/index.html) 
 
-+ 获取[angular-phonecat](https://github.com/angular/angular-phonecat)源代码
-
+获取[angular-phonecat](https://github.com/angular/angular-phonecat)源代码
 
     git clone git://github.com/angular/angular-phonecat.git
 
-
-+ 开启运行 
-
+开启运行 
 
     cd angular-phonecat
     npm start
 
-
-+ 访问[http://localhost:8000/app/index.html](http://localhost:8000/app/index.html)可以看到已经运行成功。
+访问[http://localhost:8000/app/index.html](http://localhost:8000/app/index.html)可以看到已经运行成功。
 
 ### 引导AngularJS应用
 
