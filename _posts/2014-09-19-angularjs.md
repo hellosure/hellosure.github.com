@@ -24,6 +24,9 @@ git clone git://github.com/angular/angular-phonecat.git
 
 ```
 cd angular-phonecat
+
+</br>
+
 npm start
 ```
 
