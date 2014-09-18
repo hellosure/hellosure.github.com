@@ -13,9 +13,11 @@ tags: [Angular,JavaScript]
 
 + 获取[angular-phonecat](https://github.com/angular/angular-phonecat)源代码
 
+
     git clone git://github.com/angular/angular-phonecat.git
 
 + 开启运行 
+
 
     cd angular-phonecat
     npm start
