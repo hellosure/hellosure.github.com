@@ -14,21 +14,15 @@ tags: [Angular,JavaScript]
 + 获取[angular-phonecat](https://github.com/angular/angular-phonecat)源代码
 
 
-```
-git clone git://github.com/angular/angular-phonecat.git
-```
+    git clone git://github.com/angular/angular-phonecat.git
 
 
 + 开启运行 
 
 
-```
-cd angular-phonecat
+    cd angular-phonecat
+    npm start
 
-</br>
-
-npm start
-```
 
 + 访问[http://localhost:8000/app/index.html](http://localhost:8000/app/index.html)可以看到已经运行成功。
 
