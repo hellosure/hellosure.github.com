@@ -1,4 +1,4 @@
-hellosure.github.com
+hellosure.github.io
 ======================
 
 Technology-related personal blog by HelloSure.
