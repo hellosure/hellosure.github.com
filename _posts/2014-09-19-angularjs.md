@@ -63,8 +63,7 @@ tags: [Angular,JavaScript]
 在`index.html`中添加静态代码：
 
 
-```
-
+{% highlight html %}
 <ul>
     <li>
         <span>Nexus S</span>
@@ -82,10 +81,13 @@ tags: [Angular,JavaScript]
 
 <p>Total number of phones: 2</p>
 
-```
+{% endhighlight %}
 
 
 刷新页面可以看到效果。
 
 ### 动态特性
 
+
+
+-EOF-
