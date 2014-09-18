@@ -62,7 +62,9 @@ tags: [Angular,JavaScript]
 
 在`index.html`中添加静态代码：
 
+
 ```
+
 <ul>
     <li>
         <span>Nexus S</span>
@@ -79,7 +81,9 @@ tags: [Angular,JavaScript]
 </ul>
 
 <p>Total number of phones: 2</p>
+
 ```
+
 
 刷新页面可以看到效果。
 
