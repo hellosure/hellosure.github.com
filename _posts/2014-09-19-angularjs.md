@@ -88,6 +88,96 @@ tags: [Angular,JavaScript]
 
 ### 动态特性
 
+下面利用MVC来显示上面的手机列表：
+
+{% highlight html %}
+<html ng-app>
+<head>
+  ...
+  <script src="lib/angular/angular.js"></script>
+  <script src="js/controllers.js"></script>
+</head>
+<body ng-controller="PhoneListCtrl">
+
+  <ul>
+    <li ng-repeat="phone in phones">
+      {{phone.name}}
+    <p>{{phone.snippet}}</p>
+    </li>
+  </ul>
+</body>
+</html>
+
+{% endhighlight %}
+
+在`<li>`标签里面的`ng-repeat="phone in phones"`语句是一个AngularJS迭代器。这个迭代器告诉AngularJS用第一个`<li>`标签作为模板为列表中的每一部手机创建一个`<li>`元素。
+
+`ng-controller`是指明控制器的名称，它在js中定义。
+
+![mvc](http://docs.angularjs.org/img/tutorial/tutorial_02.png "mvc")
+
+控制器在app/js/controller.js:
+
+{% highlight javascript %}
+function PhoneListCtrl($scope) {
+  $scope.phones = [
+    {"name": "Nexus S",
+     "snippet": "Fast just got faster with Nexus S."},
+    {"name": "Motorola XOOM™ with Wi-Fi",
+     "snippet": "The Next, Next Generation tablet."},
+    {"name": "MOTOROLA XOOM™",
+     "snippet": "The Next, Next Generation tablet."}
+  ];
+}
+{% endhighlight %}
+
+手机的数据此时与注入到我们控制器函数的作用域（$scope）相关联。这个控制器的作用域对所有`<body ng-controller="PhoneListCtrl">`标记内部的数据绑定有效。
+
+### 作用域
+
+AngularJS的作用域理论非常重要：一个作用域可以视作模板、模型和控制器协同工作的粘接器。AngularJS使用作用域，同时还有模板中的信息，数据模型和控制器。这些可以帮助模型和视图分离，但是他们两者确实是同步的！任何对于模型的更改都会即时反映在视图上；任何在视图上的更改都会被立刻体现在模型中。
+
+### 迭代器过滤
+
+{% highlight html %}
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <!--Sidebar content-->
+
+      Search: <input ng-model="query">
+
+    </div>
+    <div class="span10">
+      <!--Body content-->
+
+      <ul class="phones">
+        <li ng-repeat="phone in phones | filter:query">
+          {{phone.name}}
+        <p>{{phone.snippet}}</p>
+        </li>
+      </ul>
+
+       </div>
+  </div>
+</div>
+
+{% endhighlight %}
+
+我们现在添加了一个`<input>`标签，并且使用AngularJS的`$filter`函数来处理`ng-repeat`指令的输入。
+
+这样允许用户输入一个搜索条件，立刻就能看到对电话列表的搜索结果。
+
+> 数据绑定：这是AngularJS的一个核心特性。当页面加载的时候，AngularJS会根据输入框的属性值名字，将其与数据模型中相同名字的变量绑定在一起，以确保两者的同步性。
+在这段代码中，用户在输入框中输入的数据名字称作`query`，会立刻作为列表迭代器（`phone in phones | filter:query`）其过滤器的输入。当数据模型引起迭代器输入变化的时候，迭代器可以高效得更新DOM将数据模型最新的状态反映出来。
+
+filter过滤器：`filter`函数使用`query`的值来创建一个只包含匹配`query`记录的新数组。
+
+`ng-repeat`会根据`filter`过滤器生成的手机记录数据数组来自动更新视图。整个过程对于开发者来说都是透明的。
+
+### 双向绑定
+
 
 
 -EOF-
