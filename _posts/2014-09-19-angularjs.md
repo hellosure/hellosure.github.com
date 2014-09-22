@@ -116,6 +116,7 @@ tags: [Angular,JavaScript]
 
 ![mvc](http://docs.angularjs.org/img/tutorial/tutorial_02.png "mvc")
 
+
 控制器在app/js/controller.js:
 
 {% highlight javascript %}
