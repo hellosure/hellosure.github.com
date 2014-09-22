@@ -179,6 +179,77 @@ filter过滤器：`filter`函数使用`query`的值来创建一个只包含匹�
 
 ### 双向绑定
 
+{% highlight html %}
+Search: <input ng-model="query">
+Sort by:
+<select ng-model="orderProp">
+  <option value="name">Alphabetical</option>
+  <option value="age">Newest</option>
+</select>
+
+
+<ul class="phones">
+  <li ng-repeat="phone in phones | filter:query | orderBy:orderProp">
+    {{phone.name}}
+    <p>{{phone.snippet}}</p>
+  </li>
+</ul>
+{% endhighlight %}
+
+增加了一个叫做orderProp的<select>标签，这样我们的用户就可以选择我们提供的两种排序方法。
+
+然后，在filter过滤器后面添加一个orderBy过滤器用其来处理进入迭代器的数据。orderBy过滤器以一个数组作为输入，复制一份副本，然后把副本重排序再输出到迭代器。
+AngularJS在select元素和orderProp模型之间创建了一个双向绑定。而后，orderProp会被用作orderBy过滤器的输入。
+
+正如我们在讨论数据绑定和迭代器的时候所说的一样，无论什么时候数据模型发生了改变（比如用户在下拉菜单中选了不同的顺序），AngularJS的数据绑定会让视图自动更新。没有任何笨拙的DOM操作！
+
+还需要修改一下数据模型：
+
+{% highlight javascript %}
+function PhoneListCtrl($scope) {
+  $scope.phones = [
+    {"name": "Nexus S",
+     "snippet": "Fast just got faster with Nexus S.",
+     "age": 0},
+    {"name": "Motorola XOOM™ with Wi-Fi",
+     "snippet": "The Next, Next Generation tablet.",
+     "age": 1},
+    {"name": "MOTOROLA XOOM™",
+     "snippet": "The Next, Next Generation tablet.",
+     "age": 2}
+  ];
+
+  $scope.orderProp = 'age';
+}
+{% endhighlight %}
+
+我们修改了`phones`模型—— 手机的数组 ——为每一个手机记录其增加了一个`age`属性。我们会根据`age`属性来对手机进行排序。
+我们在控制器代码里加了一行让`orderProp`的默认值为`age`。如果我们不设置默认值，这个模型会在我们的用户在下拉菜单选择一个顺序之前一直处于未初始化状态。
+
+> 现在我们该好好谈谈双向数据绑定了。注意到当应用在浏览器中加载时，“Newest”在下拉菜单中被选中。这是因为我们在控制器中把`orderProp`设置成了‘age’。所以绑定在从我们模型到用户界面的方向上起作用——即数据从模型到视图的绑定。
+现在当你在下拉菜单中选择“Alphabetically”，数据模型会被同时更新，并且手机列表数组会被重新排序。这个时候数据绑定从另一个方向产生了作用——即数据从视图到模型的绑定。（注意这块的“模型”指的就是`phones`，而不是指的js文件中的代码）
+
+### 依赖注入
+
+数据为json提供：`app/phones/phones.json`文件是一个数据集，它以JSON格式存储了一张更大的手机列表。
+
+下面是这个文件的一个样例：
+{% highlight json %}
+[
+ {
+  "age": 13,
+  "id": "motorola-defy-with-motoblur",
+  "name": "Motorola DEFY\u2122 with MOTOBLUR\u2122",
+  "snippet": "Are you ready for everything life throws your way?"
+  ...
+ },
+...
+]
+{% endhighlight %}
+
+我们在控制器中使用AngularJS服务`$http`向你的Web服务器发起一个HTTP请求，以此从`app/phones/phones.json`文件中获取数据。$http仅仅是AngularJS众多内建服务中之一，这些服务可以处理一些Web应用的通用操作。AngularJS能将这些服务注入到任何你需要它们的地方。
+
+> 服务是通过AngularJS的依赖注入DI子系统来管理的。依赖注入服务可以使你的Web应用良好构建（比如分离表现层、数据和控制三者的部件）并且松耦合（一个部件自己不需要解决部件之间的依赖问题，它们都被DI子系统所处理）。
 
 
 -EOF-
