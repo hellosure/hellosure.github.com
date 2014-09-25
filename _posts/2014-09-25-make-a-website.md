@@ -2,7 +2,7 @@
 layout: post
 title: 从零开始开发一个静态网站
 category: CSS
-tags: [HTML,CSS]
+tags: [HTML,CSS,Bootstrap]
 ---
 
 ### [make a website](www.codecademy.com/en/skills/make-a-website/resume)
