@@ -251,5 +251,267 @@ function PhoneListCtrl($scope) {
 
 > 服务是通过AngularJS的依赖注入DI子系统来管理的。依赖注入服务可以使你的Web应用良好构建（比如分离表现层、数据和控制三者的部件）并且松耦合（一个部件自己不需要解决部件之间的依赖问题，它们都被DI子系统所处理）。
 
+{% highlight javascript %}
+function PhoneListCtrl($scope, $http) {
+  $http.get('phones/phones.json').success(function(data) {
+    $scope.phones = data;
+  });
+
+  $scope.orderProp = 'age';
+}
+
+//PhoneListCtrl.$inject = ['$scope', '$http'];
+{% endhighlight %}
+
+`$http`向Web服务器发起一个HTTP GET请求，索取`phone/phones.json`（注意，url是相对于我们的index.html文件的）。服务器用json文件中的数据作为响应。
+
+`$http`服务用`success`返回。当异步响应到达时，用这个对象应答函数来处理服务器响应的数据，并且把数据赋值给作用域的`phones`数据模型。
+
+#### JS压缩
+
+由于AngularJS是通过控制器构造函数的参数名字来推断依赖服务名称的。所以如果你要压缩`PhoneListCtrl`控制器的JS代码，它所有的参数也同时会被压缩，这时候依赖注入系统就不能正确的识别出服务了。
+
+为了克服压缩引起的问题，只要在控制器函数里面给`$inject`属性赋值一个依赖服务标识符的数组，就像被注释掉那段最后一行那样：
+
+    PhoneListCtrl.$inject = ['$scope', '$http'];
+
+### 链接与图片模板
+
+数据：现在`app/phones/phones.json`文件包含了唯一标识符和每一部手机的图像链接。这些url现在指向`app/img/phones/`目录。
+
+{% highlight json %}
+
+[
+ {
+  ...
+  "id": "motorola-defy-with-motoblur",
+  "imageUrl": "img/phones/motorola-defy-with-motoblur.0.jpg",
+  "name": "Motorola DEFY\u2122 with MOTOBLUR\u2122",
+  ...
+ },
+...
+]
+{% endhighlight %}
+
+模板`app/index.html`
+
+{% highlight html %}
+...
+        <ul class="phones">
+          <li ng-repeat="phone in phones | filter:query | orderBy:orderProp" class="thumbnail">
+            <a href="#/phones/{{phone.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>
+            <a href="#/phones/{{phone.id}}">{{phone.name}}</a>
+            <p>{{phone.snippet}}</p>
+          </li>
+        </ul>
+...
+{% endhighlight %}
+
+这些链接将来会指向每一部电话的详细信息页。不过现在为了产生这些链接，我们在`href`属性里面使用我们早已熟悉的双括号数据绑定。
+
+我们同样为每条记录添加手机图片，只需要使用`ng-src`指令代替`<img>`的`src`属性标签就可以了。如果我们仅仅用一个正常`src`属性来进行绑定（`<img class="diagram" src="{{phone.imageUrl}}">`），浏览器会把AngularJS的`{{ 表达式 }}`标记直接进行字面解释，并且发起一个向非法url`http://localhost:8000/app/{{phone.imageUrl}}`的请求。因为浏览器载入页面时，同时也会请求载入图片，**AngularJS在页面载入完毕时才开始编译**——浏览器请求载入图片时`{{phone.imageUrl}}`还没得到编译！有了这个`ng-src`指令会避免产生这种情况，使用`ng-src`指令防止浏览器产生一个指向非法地址的请求。
+
+### 路由和多视图
+
+在完成这步之后，当你转到app/index.html时，你会被重定向到app/index.html#/phones并且相同的手机列表在浏览器中显示了出来。当你点击一个手机链接时，一个手机详细信息列表也被显示了出来。
+
+在这步之前，应用只给我们的用户提供了一个简单的界面（一张所有手机的列表），并且所有的模板代码位于`index.html`文件中。下一步是增加一个能够显示我们列表中每一部手机详细信息的页面。
+
+为了增加详细信息视图，我们可以拓展`index.html`来同时包含两个视图的模板代码，但是这样会很快给我们带来巨大的麻烦。相反，我们要把`index.html`模板转变成**“布局模板”**。这是我们应用所有视图的通用模板。其他的“局部布局模板”随后根据当前的“路由”被充填入，从而形成一个完整视图展示给用户。
+
+AngularJS中应用的路由通过`$routeProvider`来声明，它是`$route`服务的提供者。这项服务使得控制器、视图模板与当前浏览器的URL可以轻易集成。应用这个特性我们就可以实现深链接，它允许我们使用浏览器的历史(回退或者前进导航)和书签。
+
+#### 关于依赖注入（DI），注入器（Injector）和服务提供者（Providers）
+
+正如从前面你学到的，依赖注入是AngularJS的核心特性，所以你必须要知道一点这家伙是怎么工作的。
+
+当应用引导时，AngularJS会创建一个注入器，我们应用后面所有依赖注入的服务都会需要它。这个注入器自己并不知道`$http`和`$route`是干什么的，实际上除非它在模块定义的时候被配置过，否则它根本都不知道这些服务的存在。注入器唯一的职责是载入指定的服务模块，在这些模块中注册所有定义的服务提供者，并且当需要时给一个指定的函数注入依赖（服务）。这些依赖通过它们的提供者“懒惰式”（需要时才加载）实例化。
+
+提供者是提供（创建）服务实例并且对外提供API接口的对象，它可以被用来控制一个服务的创建和运行时行为。对于`$route`服务来说，`$routeProvider`对外提供了API接口，通过API接口允许你为你的应用定义路由规则。
+
+    我理解angular的依赖注入的含义就是，把一些服务通过简单的API注入到应用中来。这个确实挺强大的。
+
+`app/js/app.js`
+{% highlight javascript %}
+angular.module('phonecat', []).
+  config(['$routeProvider', function($routeProvider) {
+  $routeProvider.
+      when('/phones', {templateUrl: 'partials/phone-list.html',   controller: PhoneListCtrl}).
+      when('/phones/:phoneId', {templateUrl: 'partials/phone-detail.html', controller: PhoneDetailCtrl}).
+      otherwise({redirectTo: '/phones'});
+}]);
+{% endhighlight %}
+
+为了给我们的应用配置路由，我们需要给应用创建一个模块。我们管这个模块叫做`phonecat`，并且通过使用`configAPI`，我们请求把`$routeProvider`注入到我们的配置函数并且使用`$routeProvider.whenAPI`来定义我们的路由规则。
+
+注意到在注入器配置阶段，提供者也可以同时被注入，但是一旦注入器被创建并且开始创建服务实例的时候，他们就不再会被外界所获取到。
+
+我们的路由规则定义如下
+
+> 当URL 映射段为`/phones`时，手机列表视图会被显示出来。为了构造这个视图，AngularJS会使用`phone-list.html`模板和`PhoneListCtrl`控制器。
+当URL 映射段为`/phone/:phoneId`时，手机详细信息视图被显示出来。这里`:phoneId`是URL的变量部分。为了构造手机详细视图，AngularJS会使用`phone-detail.html`模板和`PhoneDetailCtrl`控制器。
+`$route.otherwise({redirectTo: '/phones'})`语句使得当浏览器地址不能匹配我们任何一个路由规则时，触发重定向到`/phones`。
+
+注意到在第二条路由声明中`:phoneId`参数的使用。`$route`服务使用路由声明`/phones/:phoneId`作为一个匹配当前URL的模板。所有以:符号声明的变量（此处变量为phones）都会被提取，然后存放在`$routeParams`对象中。
+
+为了让我们的应用引导我们新创建的模块，我们同时需要在`app/index.html`的`ngApp`指令的值上指明模块的名字：
+
+{% highlight html %}
+
+<!doctype html>
+<html lang="en" ng-app="phonecat">
+...
+{% endhighlight %}
+
+控制器`app/js/controllers.js`
+
+{% highlight javascript %}
+...
+function PhoneDetailCtrl($scope, $routeParams) {
+  $scope.phoneId = $routeParams.phoneId;
+}
+
+//PhoneDetailCtrl.$inject = ['$scope', '$routeParams'];
+{% endghighlight %}
+
+`$route`服务通常和`ngView`指令一起使用。`ngView`指令的角色是为当前路由把对应的视图模板载入到布局模板中。
+
+`app/index.html`中：
+
+{% highlight html %}
+<html lang="en" ng-app="phonecat">
+<head>
+...
+  <script src="lib/angular/angular.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
+</head>
+<body>
+
+  <div ng-view></div>
+
+</body>
+</html>
+{% endhighlight %}
+
+注意，我们把`index.html`模板里面大部分代码移除，我们只放置了一个`<div>`容器，这个`<div>`具有`ng-view`属性。我们删除掉的代码现在被放置在`phone-list.html`模板中：
+
+{% highlight html %}
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <!--Sidebar content-->
+
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+        <option value="name">Alphabetical</option>
+        <option value="age">Newest</option>
+      </select>
+
+    </div>
+    <div class="span10">
+      <!--Body content-->
+
+      <ul class="phones">
+        <li ng-repeat="phone in phones | filter:query | orderBy:orderProp" class="thumbnail">
+          <a href="#/phones/{{phone.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>
+          <a href="#/phones/{{phone.id}}">{{phone.name}}</a>
+          <p>{{phone.snippet}}</p>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>
+{% endhighlight %}
+
+注意到我们的布局模板中没再添加`PhoneListCtrl`或`PhoneDetailCtrl`控制器属性！
+
+接下来，将实现手机详细信息视图，我们将会使用`$http`来获取数据，同时我们也要增添一个`phone-detail.html`视图模板。
+这里相当于是给出了写一个页面的整体过程，所以很有参考价值：
+
++ 数据
+
+`app/phones/`目录包含了每一部手机信息的json文件。
+
+比如`app/phones/nexus-s.json`（样例片段）:
+
+{% highlight json %}
+{
+  "additionalFeatures": "Contour Display, Near Field Communications (NFC),...",
+  "android": {
+      "os": "Android 2.3",
+      "ui": "Android"
+  },
+  ...
+  "images": [
+      "img/phones/nexus-s.0.jpg",
+      "img/phones/nexus-s.1.jpg",
+      "img/phones/nexus-s.2.jpg",
+      "img/phones/nexus-s.3.jpg"
+  ],
+  "storage": {
+      "flash": "16384MB",
+      "ram": "512MB"
+  }
+}
+{% endhighlight %}
+
+这些文件中的每一个都用相同的数据结构描述了一部手机的不同属性。我们会在手机详细信息视图中显示这些数据。
+
++ 控制器
+
+我们使用`$http`服务获取数据。这和之前的手机列表控制器的工作方式是一样的。
+
+`app/js/controllers.js`中：
+
+{% highlight javascript %}
+function PhoneDetailCtrl($scope, $routeParams, $http) {
+  $http.get('phones/' + $routeParams.phoneId + '.json').success(function(data) {
+    $scope.phone = data;
+  });
+}
+
+//PhoneDetailCtrl.$inject = ['$scope', '$routeParams', '$http'];
+{% endhighlight %}
+
+为了构造HTTP请求的URL，我们需要`$route`服务提供的当前路由中抽取`$routeParams.phoneId`。
+
++ 模板
+
+`phone-detail.html`文件，这里我们使用AngularJS的`{{表达式}}`标记和`ngRepeat`来在视图中渲染数据模型。
+
+{% highlight html %}
+<img ng-src="{{phone.images[0]}}" class="phone">
+
+<h1>{{phone.name}}</h1>
+
+<p>{{phone.description}}</p>
+
+<ul class="phone-thumbs">
+  <li ng-repeat="img in phone.images">
+    <img ng-src="{{img}}">
+  </li>
+</ul>
+
+<ul class="specs">
+  <li>
+    <span>Availability and Networks</span>
+    <dl>
+      <dt>Availability</dt>
+      <dd ng-repeat="availability in phone.availability">{{availability}}</dd>
+    </dl>
+  </li>
+    ...
+  </li>
+    <span>Additional Features</span>
+    <dd>{{phone.additionalFeatures}}</dd>
+  </li>
+</ul>
+{% endhighlight %}
+
+### 过滤器
+
 
 -EOF-
