@@ -160,24 +160,24 @@ flush();
 {% endhighlight %}
 
 
-### HTML <div> 元素
+### HTML `<div>` 元素
 
-HTML <div> 元素是块级元素，它是可用于组合其他 HTML 元素的容器。
+HTML `<div>` 元素是块级元素，它是可用于组合其他 HTML 元素的容器。
 
-<div> 元素没有特定的含义。除此之外，由于它属于块级元素，浏览器会在其前后显示折行。
+`<div>` 元素没有特定的含义。除此之外，由于它属于块级元素，浏览器会在其前后显示折行。
 
-如果与 CSS 一同使用，<div> 元素可用于对大的内容块设置样式属性。
+如果与 CSS 一同使用，`<div>` 元素可用于对大的内容块设置样式属性。
 
-<div> 元素的另一个常见的用途是文档布局。它取代了使用表格定义布局的老式方法。
+`<div>` 元素的另一个常见的用途是文档布局。它取代了使用表格定义布局的老式方法。
 
 
-### HTML <span> 元素
+### HTML `<span>` 元素
 
-HTML <span> 元素是内联元素，可用作文本的容器。
+HTML `<span>` 元素是内联元素，可用作文本的容器。
 
-<span> 元素也没有特定的含义。
+`<span>` 元素也没有特定的含义。
 
-当与 CSS 一同使用时，<span> 元素可用于为部分文本设置样式属性。
+当与 CSS 一同使用时，`<span>` 元素可用于为部分文本设置样式属性。
 
 
 ### iframe
@@ -185,11 +185,11 @@ HTML <span> 元素是内联元素，可用作文本的容器。
 用于在网页内显示网页。
 
 {% highlight html %}
-    <html>
-      <body>
-        <iframe src="/example/html/demo_iframe.html" width="200" height="200" frameborder="0"></iframe>
-      </body>
-    </html>
+<html>
+  <body>
+    <iframe src="/example/html/demo_iframe.html" width="200" height="200" frameborder="0"></iframe>
+  </body>
+</html>
 {% endhighlight %}
 
 其中frameborder是边框大小。
@@ -199,8 +199,8 @@ iframe 可用作链接的目标（target）。
 链接的 `target` 属性必须引用 iframe 的 `name` 属性：
 
 {% highlight html %}
-    <iframe src="demo_iframe.htm" name="iframe_a"></iframe>
-    <p><a href="http://www.w3school.com.cn" target="iframe_a">W3School.com.cn</a></p>
+<iframe src="demo_iframe.htm" name="iframe_a"></iframe>
+<p><a href="http://www.w3school.com.cn" target="iframe_a">W3School.com.cn</a></p>
 {% endhighlight %}
 
 
