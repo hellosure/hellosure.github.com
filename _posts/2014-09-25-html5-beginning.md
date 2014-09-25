@@ -2,14 +2,15 @@
 layout: post
 title: 初学HTML5
 category: HTML5
-tags: [HTML5]
+tags: [HTML5,HTML]
 ---
 
 在[w3school](http://www.w3school.com.cn/html5/index.asp)对html5进行了初步的了解。
 
 ### 思想
 
-HTML5减少对外部插件的需求-->用video和audio元素扼杀flash
+HTML5减少对外部插件的需求-->用video和audio元素扼杀flash。
+
 HTML5独立于设备-->对各种设备友好
 
 ### 新特性
@@ -17,8 +18,8 @@ HTML5独立于设备-->对各种设备友好
 1. 用于绘画的 `canvas` 元素
 2. 用于媒介回放的 `video` 和 `audio` 元素
 3. 对本地离线存储的更好的支持
-4. 新的特殊内容元素，比如 article、footer、header、nav、section
-5. 新的表单控件，比如 calendar、date、time、email、url、search，直接使用即可，非常方便
+4. 新的特殊内容元素，比如 `article`、`footer`、`header`、`nav`、`section`
+5. 新的表单控件，比如 `calendar`、`date`、`time`、`email`、`url`、`search`，直接使用即可，非常方便
 
 ### 浏览器
 
@@ -31,7 +32,7 @@ ogg和mp4格式可以覆盖所有支持video的浏览器：
     <video width="320" height="240" controls="controls">
       <source src="movie.ogg" type="video/ogg">
       <source src="movie.mp4" type="video/mp4">
-    Your browser does not support the video tag.
+      Your browser does not support the video tag.
     </video>
 
 相对的，ogg和mp3可以覆盖所有支持audio的浏览器。
@@ -56,20 +57,23 @@ ogg和mp4格式可以覆盖所有支持video的浏览器：
 
 ### Canvas
 
-canvas元素本身是没有绘图能力的。所有的绘制工作必须在JavaScript内部完成。
+`canvas`元素本身是没有绘图能力的。所有的绘制工作必须在JavaScript内部完成。
 
     var c=document.getElementById("myCanvas");
     var cxt=c.getContext("2d");
 
-然后cxt就有了很多2D的绘图方法可以调用。
+然后`cxt`就有了很多2D的绘图方法可以调用。
 
 ### 矢量图SVG
 
 放大后图像不会失真，和分辨率无关。
 SVG使用XML编写的，HTML5有`svg`元素可以直接引用。
 
-Canvas最适合图像密集型的游戏，其中的许多对象会被频繁重绘
-SVG最适合带有大型渲染区域的应用程序（比如谷歌地图）
+对比：
+
+Canvas最适合图像密集型的游戏，其中的许多对象会被频繁重绘。
+
+SVG最适合带有大型渲染区域的应用程序（比如谷歌地图）。
 
 ### Geolocation
 
