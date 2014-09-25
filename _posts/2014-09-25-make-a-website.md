@@ -150,6 +150,8 @@ tags: [HTML,CSS]
 
 + **Tab**
 
+![tab](http://s3.amazonaws.com/codecademy-content/courses/ltp/img/2/bootstrap-tabs.png "tab")
+
 {% highlight html %}
 <ul class="nav nav-tabs">
 	<li><a href="#">Primary</a></li>
@@ -165,6 +167,8 @@ tags: [HTML,CSS]
 
 用于为页面添加一些按钮链接。
 
+![pill](http://s3.amazonaws.com/codecademy-content/courses/ltp/img/2/bootstrap-pills.png "pill")
+
 {% highlight html %}
 <ul class="nav nav-pills">
 	<li><a href="#">Primary</a></li>
@@ -179,6 +183,8 @@ tags: [HTML,CSS]
 + *Jumbotron*
 
 用于展示重要信息。
+
+![jumbo](http://s3.amazonaws.com/codecademy-content/courses/ltp/img/2/bootstrap-jumbotron.png "jumbo")
 
 {% highlight html %}
 <div class="jumbotron">
