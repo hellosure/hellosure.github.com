@@ -483,32 +483,34 @@ function PhoneDetailCtrl($scope, $routeParams, $http) {
 `phone-detail.html`文件，这里我们使用AngularJS的`{{表达式}}`标记和`ngRepeat`来在视图中渲染数据模型。
 
 {% highlight html %}
-<img ng-src="{{phone.images[0]}}" class="phone">
 
-<h1>{{phone.name}}</h1>
+    <img ng-src="{{phone.images[0]}}" class="phone">
+    
+    <h1>{{phone.name}}</h1>
+    
+    <p>{{phone.description}}</p>
+    
+    <ul class="phone-thumbs">
+      <li ng-repeat="img in phone.images">
+        <img ng-src="{{img}}">
+      </li>
+    </ul>
+    
+    <ul class="specs">
+      <li>
+        <span>Availability and Networks</span>
+        <dl>
+          <dt>Availability</dt>
+          <dd ng-repeat="availability in phone.availability">{{availability}}</dd>
+        </dl>
+      </li>
+        ...
+      </li>
+        <span>Additional Features</span>
+        <dd>{{phone.additionalFeatures}}</dd>
+      </li>
+    </ul>
 
-<p>{{phone.description}}</p>
-
-<ul class="phone-thumbs">
-  <li ng-repeat="img in phone.images">
-    <img ng-src="{{img}}">
-  </li>
-</ul>
-
-<ul class="specs">
-  <li>
-    <span>Availability and Networks</span>
-    <dl>
-      <dt>Availability</dt>
-      <dd ng-repeat="availability in phone.availability">{{availability}}</dd>
-    </dl>
-  </li>
-    ...
-  </li>
-    <span>Additional Features</span>
-    <dd>{{phone.additionalFeatures}}</dd>
-  </li>
-</ul>
 {% endhighlight %}
 
 ### 过滤器
