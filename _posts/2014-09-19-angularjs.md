@@ -372,7 +372,7 @@ function PhoneDetailCtrl($scope, $routeParams) {
 }
 
 //PhoneDetailCtrl.$inject = ['$scope', '$routeParams'];
-{% endghighlight %}
+{% endhighlight %}
 
 `$route`服务通常和`ngView`指令一起使用。`ngView`指令的角色是为当前路由把对应的视图模板载入到布局模板中。
 
