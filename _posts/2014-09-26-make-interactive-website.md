@@ -230,3 +230,34 @@ Document Object Model (DOM)
 
 `.children()`：获取所有子节点。
 
+----
+
+### 动画效果
+
+`.slideDown()`：以指定的速度从上到下显示出来。
+
+{% highlight javascript %}
+$('body').click(function() {
+  $('.slide').slideDown(600).addClass('active-slide');
+});
+{% endhighlight %}
+
+`.slideUp()`：以制定的速度 从下到上显示出来。
+
+`.fadeIn()`：由模糊到清晰的显示出来。
+
+`.fadeOut()`：由清晰到模糊的消失出去。
+
+`.animate()`：第一个参数是一组CSS属性，第二个参数是动画用时。
+
+{% highlight javascript %}
+$('.icon-menu').click(function() {
+  $('.menu').animate({
+      width: "193px"
+    },
+    300);
+});
+{% endhighlight %}
+
+
+-EOF-
