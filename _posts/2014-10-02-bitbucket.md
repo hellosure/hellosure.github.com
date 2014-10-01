@@ -24,7 +24,7 @@ tags: [Bitbucket]
 
 而且这个新仓库是私有的而且可以选择不能被fork。
 
-但是访问<hellosure.bitbucket.org>发现不能页面不能解析。
+但是访问<hellosure.bitbucket.org>发现不能`jekyll`代码不能被解析。
 
 ### 对于pages
 
