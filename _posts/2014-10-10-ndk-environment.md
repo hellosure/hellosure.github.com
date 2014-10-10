@@ -127,3 +127,17 @@ tags: [Android,NDK]
 
 4、此时去hello-jni的libs目录下看有没有生成的`.so`文件，如果有，你的ndk就运行正常啦！
 
+
+### Mac OS
+
+1、打开终端
+
+2、`vim ~/.bash_profile`，添加`export PATH=${PATH}:/Applications/adt-bundle-mac-x86_64/android-ndk-r8e`
+
+3、 输入`source ~/.bash_profile`，回车，以使前面的更改生效。
+
+4、 配置eclipse的NDK：eclipse  ->preferences ->android ->NDK 然后再配置自己的NDK路径。
+
+5、 对于项目而言，右键你的项目 ->android tools ->Add Native Support..一下子就OK了。
+
+-EOF-
