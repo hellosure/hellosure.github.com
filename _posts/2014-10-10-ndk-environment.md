@@ -7,6 +7,8 @@ tags: [Android,NDK]
 
 ### NDK下载地址
 
+```
+
 http://dl.google.com/android/ndk/android-ndk32-r10-windows-x86.zip
 
 http://dl.google.com/android/ndk/android-ndk32-r10-windows-x86_64.zip
@@ -44,6 +46,8 @@ http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2
 http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86_64.tar.bz2
 
 http://dl.google.com/android/ndk/android-ndk-r9d-cxx-stl-libs-with-debug-info.zip
+
+```
 
 ### Windows
 
