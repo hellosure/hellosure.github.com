@@ -53,7 +53,13 @@ tesseract支持多种语言 - 你只需下载对应的训练过的语言文件�
 ### tesseract对IOS的支持
 
 tesseract-ocr是开源的，但是用在IOS上可能有点曲折，在网上有解决方法。
-另外github中有demo，<https://github.com/nolanbrown/Tesseract-iPhone-Demo>
+另外github中有demo：
+
+<https://github.com/nolanbrown/Tesseract-iPhone-Demo>
+
+<https://github.com/ldiqual/tesseract-ios>
+
+<https://github.com/gali8/Tesseract-OCR-iOS>
 
 ### tesseract对Android的支持
 
