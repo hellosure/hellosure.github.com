@@ -50,21 +50,6 @@ tesseract支持多种语言 - 你只需下载对应的训练过的语言文件�
 测试200多个单个字符（200张图片），识别率达到90%，字符为黑体印刷体。
 目前测试中增加字体宽度，对识别率，无明显影响。
 
-### tesseract对IOS的支持
-
-tesseract-ocr是开源的，但是用在IOS上可能有点曲折，在网上有解决方法。
-另外github中有demo：
-
-<https://github.com/nolanbrown/Tesseract-iPhone-Demo>
-
-<https://github.com/ldiqual/tesseract-ios>
-
-<https://github.com/gali8/Tesseract-OCR-iOS>
-
-### tesseract对Android的支持
-
-github中有demo，<https://github.com/rmtheis/android-ocr>，它还需要<https://github.com/rmtheis/tess-two>的支持。
-
 ### windows中命令行使用tesseract
 
 1. 下载安装Tesseract-OCR引擎(3.0版本+才支持中文识别)
@@ -116,12 +101,41 @@ github中有demo，<https://github.com/rmtheis/android-ocr>，它还需要<https
 （2）字符码的识别有些问题，比如“Z”和“2”。
 这个可能就需要训练了。
 
+（3）这个例子中还不存在这个问题，因为字符都是规则的，但是有些图片里字符是歪的或者不是标准字体，很可能是识别不正确的。
+这种情况也需要进行训练。
+
+**也就是说：要想提高识别率，除了设置白名单、提升图片精确度这两种做法之外，还有训练这种做法。**
+
+我自己的理解，提升识别正确度：
+
++ 设置白名单
+
++ 提升图片质量
+
++ 训练
+
 ### tesseract训练
 
 tesseract是自带训练工具的。
 
-### tesseract SDK
+关于如何训练样本，Tesseract-OCR官网有详细的介绍<http://code.google.com/p/tesseract-ocr/wiki/TrainingTesseract3>。
 
+网上也有很多训练的例子，这里就不赘述了。
+
+### tesseract对IOS的支持
+
+tesseract-ocr是开源的，但是用在IOS上可能有点曲折，在网上有解决方法。
+另外github中有demo：
+
+<https://github.com/nolanbrown/Tesseract-iPhone-Demo>
+
+<https://github.com/ldiqual/tesseract-ios>
+
+<https://github.com/gali8/Tesseract-OCR-iOS>
+
+### tesseract对Android的支持
+
+github中有demo，<https://github.com/rmtheis/android-ocr>，它还需要<https://github.com/rmtheis/tess-two>的支持。
 
 
 -EOF-
