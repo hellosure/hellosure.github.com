@@ -116,7 +116,7 @@ tags: [Android,NDK]
 1、现在我们用安装好的NDK来编译一个简单的程序吧，我们选择ndk自带的例子hello-jni，我的位于`C:\android-ndk-r10b\samples\hello-jni`.
 
 
-2、运行cygwin，输入命令`cd /cygdrive/e/android-ndk-r10b/samples/hello-jni`，进入到`C:\android-ndk-r10b\samples\hello-jni`目录。
+2、运行cygwin，输入命令`cd /cygdrive/c/android-ndk-r10b/samples/hello-jni`，进入到`C:\android-ndk-r10b\samples\hello-jni`目录。
 
 
 3、 输入`$NDK/ndk-build`，执行成功后，它会自动生成一个libs目录，把编译生成的.so文件放在里面。($NDK是调用我们之前配置好的环境变量，ndk-build是调用ndk的编译程序)
