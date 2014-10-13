@@ -283,7 +283,7 @@ baseApi.end();
 
 这样识别出的文字就在`recognizedText`中了。
 
-> 这个例子的代码在[https://github.com/GautamGupta/Simple-Android-OCR](https://github.com/GautamGupta/Simple-Android-OCR)，可以参考一下。
+> 这个例子的代码在[https://github.com/GautamGupta/Simple-Android-OCR](https://github.com/GautamGupta/Simple-Android-OCR)，试了一下发现这个例子和“测试二”比较像，识别率低。因此也不作考虑了。
 
 ![orc](http://gaut.am/wp-content/uploads/2011/11/capture_3-1024x768.jpg "ocr")
 
