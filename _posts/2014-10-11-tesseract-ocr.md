@@ -191,8 +191,6 @@ tess-two是Tesseract Tools for Android (tesseract-android-tools) 的一份拷贝
 
 > 在应用的场景上比较类似，拍照识别，另外识别正确度还可以，可以参考。
 
-![orc](http://gaut.am/wp-content/uploads/2011/11/capture_3-1024x768.jpg "ocr")
-
 #### 测试二
 
 用的<http://blog.csdn.net/wp8868191/article/details/9219399>中的例子。
@@ -286,6 +284,8 @@ baseApi.end();
 这样识别出的文字就在`recognizedText`中了。
 
 > 这个例子的代码在[https://github.com/GautamGupta/Simple-Android-OCR](https://github.com/GautamGupta/Simple-Android-OCR)，可以参考一下。
+
+![orc](http://gaut.am/wp-content/uploads/2011/11/capture_3-1024x768.jpg "ocr")
 
 #### TessBaseAPI
 
