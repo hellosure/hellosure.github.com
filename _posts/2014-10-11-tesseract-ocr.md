@@ -178,7 +178,7 @@ tess-two是Tesseract Tools for Android (tesseract-android-tools) 的一份拷贝
 
 在手机中SD卡添加`/mnt/sdcard/tesseract/tessdata`路径，并且传入`C:\Program Files (x86)\Tesseract-OCR\tessdata`路径下的`eng.traineddata`文件。
 
-#### 测试
+#### 测试一
 
 用github上的android-ocr<https://github.com/rmtheis/android-ocr>。
 
@@ -189,6 +189,131 @@ tess-two是Tesseract Tools for Android (tesseract-android-tools) 的一份拷贝
 可以用了，是个拍照框，点击拍照之后，就可以识别出文字。
 对英文的识别还比较不错，不过这个例子中还想翻译，这个功能我的应用是用不到的。
 
+> 在应用的场景上比较类似，拍照识别，另外识别正确度还可以，可以参考。
+
 ![orc](http://gaut.am/wp-content/uploads/2011/11/capture_3-1024x768.jpg "ocr")
+
+#### 测试二
+
+用的<http://blog.csdn.net/wp8868191/article/details/9219399>中的例子。
+
+自己尝试做了拍照识别和从相册选择图片识别。
+
+但是手机运算能力太差，图片太大、分辨率太高的话，识别时间会很长，所以在选取图片的时候调用了系统裁剪功能，并且另开线程来处理识别。
+
+推荐测试的时候不要用太大的图片。
+
+用java写了图片的预处理，所以拿过来试试能否提高识别成功率：
+
+无奈安卓无法使用java.awt里面的包，所以还费了一些时间替换成android.graphics中的一些类实现相同功能。
+
+测试发现灰度化后是能提高一些识别率，在电脑上灰度化后再用三个算法二值化后还能进一步提高识别率。
+
+但在手机上用大津法、最大熵法进行二值化花费时间太久（几乎没算成功），所以后来这两个方法就没有调用，而只用迭代法二值化效果不理想。
+
+最后的效果是，能识别一些比较规整的文字，照片的话最好只裁剪文字部分去识别（而且要照的比较清晰）。
+
+也能识别一些简单的英文、数字验证码。
+
+> 这个应用的界面不是很推荐，操作太复杂，不过图片预处理的部分还是可以看看的。
+
+#### 测试三
+
+用的是<http://www.cnblogs.com/muyun/archive/2012/06/12/2546693.html>的例子。
+
+> 这个例子很简单，不带拍照功能。另外试了一下识别率很低。所以不做考虑了。
+
+#### 测试四
+
+来自于<http://gaut.am/making-an-ocr-android-app-using-tesseract/>
+
+首先用<http://labs.makemachine.net/2010/03/simple-android-photo-capture/>是个简单的项目，用来拍照得到bitmap位图文件。
+
+然后对位图文件做个处理：
+
+{% highlight java %}
+
+// _path = path to the image to be OCRed
+ExifInterface exif = new ExifInterface(_path);
+int exifOrientation = exif.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL);
+
+int rotate = 0;
+
+switch (exifOrientation) {
+case ExifInterface.ORIENTATION_ROTATE_90:
+    rotate = 90;
+    break;
+case ExifInterface.ORIENTATION_ROTATE_180:
+    rotate = 180;
+    break;
+case ExifInterface.ORIENTATION_ROTATE_270:
+    rotate = 270;
+    break;
+}
+
+if (rotate != 0) {
+    int w = bitmap.getWidth();
+    int h = bitmap.getHeight();
+
+    // Setting pre rotate
+    Matrix mtx = new Matrix();
+    mtx.preRotate(rotate);
+
+    // Rotating Bitmap & convert to ARGB_8888, required by tess
+    bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+}
+bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+{% endhighlight %}
+
+然后就可以使用TessBaseAPI了：
+
+{% highlight java %}
+
+TessBaseAPI baseApi = new TessBaseAPI();
+// DATA_PATH = Path to the storage
+// lang = for which the language data exists, usually "eng"
+baseApi.init(DATA_PATH, lang);
+// Eg. baseApi.init("/mnt/sdcard/tesseract/tessdata/eng.traineddata", "eng");
+baseApi.setImage(bitmap);
+String recognizedText = baseApi.getUTF8Text();
+baseApi.end();
+
+{% endhighlight %}
+
+这样识别出的文字就在`recognizedText`中了。
+
+> 这个例子的代码在[https://github.com/GautamGupta/Simple-Android-OCR](https://github.com/GautamGupta/Simple-Android-OCR)，可以参考一下。
+
+#### TessBaseAPI
+
+补充一下，使用TessBaseAPI必要的代码
+
+{% highlight java %}
+
+//新建一个TessBaseAPI
+TessBaseAPI baseApi=new TessBaseAPI();
+
+//初始化API
+//android下面，tessdata肯定得放到sd卡里了，如果直接将tessdata文件夹放在SD卡得根目录下，我们这可以这样写初始化
+File path = Environment.getExternalStorageDirectory();//获取SD卡根目录
+baseApi.init(path.getAbsolutePath(),"eng");//英文是eng，简体中文是chi_sim，目测应该就是tessdata文件夹中.tessdata文件的文件名
+
+//设置要ocr的图片bitmap，这个我是采用摄像头获得的图片位图，大家也可以从文件获得，只要得到bitmap就行
+baseApi.setImage(bitmap);
+
+//根据Init的语言，获得ocr后的字符串
+String text= baseApi.getUTF8Text();
+
+//释放bitmap
+baseApi.clear();
+//如果连续ocr多张图片，这个end可以不调用，但每次ocr之后，必须调用clear来对bitmap进行释放
+//释放native内存
+baseApi.end();
+
+{% endhighlight %}
+
 
 -EOF-
