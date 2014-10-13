@@ -120,7 +120,7 @@ tesseract是自带训练工具的。
 
 关于如何训练样本，Tesseract-OCR官网有详细的介绍<http://code.google.com/p/tesseract-ocr/wiki/TrainingTesseract3>。
 
-网上也有很多训练的例子，这里就不赘述了。
+网上也有很多训练的例子，比如<http://my.oschina.net/lixinspace/blog/60124>、<http://blog.wudilabs.org/entry/f25efc5f/>这里就不赘述了。
 
 ### tesseract对IOS的支持
 
@@ -137,5 +137,58 @@ tesseract-ocr是开源的，但是用在IOS上可能有点曲折，在网上有�
 
 github中有demo，<https://github.com/rmtheis/android-ocr>，它还需要<https://github.com/rmtheis/tess-two>的支持。
 
+tess-two是Tesseract Tools for Android (tesseract-android-tools) 的一份拷贝，并添加了一些功能。Tesseract Tools for Android是Tesseract OCR和Leptonica图像处理库的Android API与构建文件的集合。
+
+共三个项目，tess-two, tess-two-test 以及eyes-two。其中tess-two和eyes-two为android lib项目，供其它项目引用。tess-two封装Tesseract的Android API，eyes-two封装leptonica的Android API。tess-two-test为OCR的测试。
+
+#### 编译
+
+关于tess-two的编译过程，可以参考github上的描述，但是我本地发现build不成功，报错为：
+
+    Android NDK: ERROR:C:/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/Android.mk:gnustl_static: LOCAL_SRC_FILES points to a missing file    
+    Android NDK: Check that C:/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi/thumb/libgnustl_static.a exists  or that its path is correct   
+    C:/android-ndk-r10b/build/core/prebuilt-library.mk:45: *** Android NDK: Aborting    .  Stop.
+
+但是查看路径之后发现，我安装的ndk10的版本不是4.8，而是4.9。
+但是ndk9的版本是4.8，所以我想还是安装ndk9好了。
+
+1. 把ndk9的下载压缩包解压，放在c盘根目录下。在环境变量Path中添加`C:\android-ndk-r9d`。在.bash_profile中也写进去。
+
+2. 在cmd中进入到`C:\android-ndk-r9d\samples\hello-jni`，执行`ndk-build`，然后等待片刻出现`libs`文件夹，其中有`.so`文件，这就说明build成功了。
+
+然后就可以开始对tess-two进行build：
+
+1. 用cmd到tess-two目录中执行`ndk-build`，这是因为已经把NDK路径添加到path路径中了，所以可以直接找到这个命令。这里需要两个小时。这步的结果是在tess-two路径中添加了`libs`和`obj`目录，里面是.so、.o、.o.d文件。
+
+2. 把`C:\Users\sure\Desktop\software\adt-bundle-windows-x86_64-20140624\sdk\tools`加入到环境变量`Path`中，这样就可以使用`android`命令。在cmd中执行`android update project --path .`。这步的结果是更新了`local.properties`文件，添加了'proguard-project.txt'文件，看了下文件内容其实就是指明了本地sdk地址。
+
+3. 执行`ant release`。这步的结果是在tess-two中添加了`bin`和`gen`目录，做的事情是将java文件编译打包了。
+
+#### 导入
+
+1. 将tess-two导入到eclipse。 File -> Import -> Existing Projects into workspace -> tess-two directory.
+
+2. 右击该工程 Android Tools -> Fix Project Properties.
+
+3. 右击该工程 Properties -> Android ，在project build target中，选择一个较新的android版本，并在Is Library前点上勾，点击OK。
+
+这个地方我遇到了很多问题，理论上直接Fix Project Properties可以消除的一些错误，我却没能完成。后来我在右击该工程->build path->configure build path 的soure中添加了res和gen文件夹，在library中add library加入了android class path container和JRE6。然后又右击该工程 Properties -> Android -> Project Build Target选择15。这样tess-two工程才没有错误了。
+
+#### 下载文字库
+
+在手机中SD卡添加`/mnt/sdcard/tesseract/tessdata`路径，并且传入`C:\Program Files (x86)\Tesseract-OCR\tessdata`路径下的`eng.traineddata`文件。
+
+#### 测试
+
+用github上的android-ocr<https://github.com/rmtheis/android-ocr>。
+
+导入之后，工程名称自动为OCRTest。选择Project Build Target为15（选这个是因为我的测试手机是这个版本）。然后右击该工程 -> Properties -> Android -> Library -> Add, 选择tess-two。
+
+在手机上开始Run了之后，首先是"Downloading data for English..."的提示框。然后是"Uncompressing data for English..."。然后是"Downloading data for orientation and script detection..."。
+
+可以用了，是个拍照框，点击拍照之后，就可以识别出文字。
+对英文的识别还比较不错，不过这个例子中还想翻译，这个功能我的应用是用不到的。
+
+![orc](http://gaut.am/wp-content/uploads/2011/11/capture_3-1024x768.jpg "ocr")
 
 -EOF-
