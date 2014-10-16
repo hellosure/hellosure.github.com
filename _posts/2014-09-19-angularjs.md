@@ -513,7 +513,92 @@ function PhoneDetailCtrl($scope, $routeParams, $http) {
 
 {% endhighlight %}
 
-### 过滤器
+### 事件处理器
+
+控制器`app/js/controllers.js`
 
 
+{% highlight javascript %}
+
+...
+function PhoneDetailCtrl($scope, $routeParams, $http) {
+  $http.get('phones/' + $routeParams.phoneId + '.json').success(function(data) {
+    $scope.phone = data;
+    $scope.mainImageUrl = data.images[0];
+  });
+
+ $scope.setImage = function(imageUrl) {
+    $scope.mainImageUrl = imageUrl;
+  }
+}
+
+//PhoneDetailCtrl.$inject = ['$scope', '$routeParams', '$http'];
+
+{% endhighlight %}
+
+在PhoneDetailCtrl控制器中，我们创建了mainImageUrl模型属性，并且把它的默认值设为第一个手机图片的URL。
+
+模板`app/partials/phone-detail.html`
+
+{% highlight html %}
+
+<img ng-src="{{mainImageUrl}}" class="phone">
+
+...
+
+<ul class="phone-thumbs">
+  <li ng-repeat="img in phone.images">
+    <img ng-src="{{img}}" ng-click="setImage(img)">
+  </li>
+</ul>
+...
+
+{% endhighlight %}
+
+我们把大图片的ngSrc指令绑定到mainImageUrl属性上。
+
+同时我们注册一个ngClick处理器到缩略图上。当一个用户点击缩略图的任意一个时，这个处理器会使用setImage事件处理函数来把mainImageUrl属性设置成选定缩略图的URL。
+
+### REST和定制服务
+
+定义一个代表RESTful客户端的定制服务。有了这个客户端我们可以用一种更简单的方式来发送XHR请求，而不用去关心更底层的$http服务（API、HTTP方法和URL）。
+
+模板`app/index.html`:
+定制的服务被定义在app/js/services，所以我们需要在布局模板中引入这个文件。另外，我们也要加载angularjs-resource.js这个文件，它包含了ngResource模块以及其中的$resource服务，我们一会就会用到它们：
+
+{% highlight html %}
+
+...
+  <script src="js/services.js"></script>
+  <script src="lib/angular/angular-resource.js"></script>
+...
+
+{% endhighlight %}
+
+服务`app/js/services.js`
+
+{% highlight javascript %}
+
+angular.module('phonecatServices', ['ngResource']).
+    factory('Phone', function($resource){
+      return $resource('phones/:phoneId.json', {}, {
+        query: {method:'GET', params:{phoneId:'phones'}, isArray:true}
+      });
+    });
+    
+{% endhighlight %}
+
+我们使用模块API通过一个工厂方法注册了一个定制服务。我们传入服务的名字Phone和工厂函数。工厂函数和控制器构造函数差不多，它们都通过函数参数声明依赖服务。Phone服务声明了它依赖于$resource服务。
+
+$resource服务使得用短短的几行代码就可以创建一个RESTful客户端。我们的应用使用这个客户端来代替底层的$http服务。
+
+`app/js/app.js`
+
+{% highlight javascript %}
+
+...
+angular.module('phonecat', ['phonecatFilters', 'phonecatServices']).
+...
+
+我们需要把phonecatServices添加到phonecat的依赖数组里。
 -EOF-
