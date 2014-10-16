@@ -600,5 +600,59 @@ $resource服务使得用短短的几行代码就可以创建一个RESTful客户�
 angular.module('phonecat', ['phonecatFilters', 'phonecatServices']).
 ...
 
+{% endhighlight %}
+
 我们需要把phonecatServices添加到phonecat的依赖数组里。
+
+控制器`app/js/controllers.js`:
+
+通过重构掉底层的$http服务，把它放在一个新的服务Phone中，我们可以大大简化子控制器（PhoneListCtrl和PhoneDetailCtrl）。AngularJS的$resource相比于$http更加适合于与RESTful数据源交互。而且现在我们更容易理解控制器这些代码在干什么了。
+
+{% highlight javascript %}
+
+...
+
+function PhoneListCtrl($scope, Phone) {
+  $scope.phones = Phone.query();
+  $scope.orderProp = 'age';
+}
+
+//PhoneListCtrl.$inject = ['$scope', 'Phone'];
+
+
+
+function PhoneDetailCtrl($scope, $routeParams, Phone) {
+  $scope.phone = Phone.get({phoneId: $routeParams.phoneId}, function(phone) {
+    $scope.mainImageUrl = phone.images[0];
+  });
+
+  $scope.setImage = function(imageUrl) {
+    $scope.mainImageUrl = imageUrl;
+  }
+}
+
+//PhoneDetailCtrl.$inject = ['$scope', '$routeParams', 'Phone'];
+
+{% endhighlight %}
+
+注意到，在PhoneListCtrl里我们把：
+
+{% highlight javascript %}
+
+$http.get('phones/phones.json').success(function(data) {
+  $scope.phones = data;
+});
+
+{% endhighlight %}
+
+换成了：
+
+    $scope.phones = Phone.query();
+
+我们通过这条简单的语句来查询所有的手机。
+
+另一个非常需要注意的是，在上面的代码里面，当调用Phone服务的方法是我们并没有传递任何回调函数。尽管这看起来结果是同步返回的，其实根本就不是。被同步返回的是一个“future”——一个对象，当XHR相应返回的时候会填充进数据。鉴于AngularJS的数据绑定，我们可以使用future并且把它绑定到我们的模板上。然后，当数据到达时，我们的视图会自动更新。
+
+有的时候，单单依赖future对象和数据绑定不足以满足我们的需求，所以在这些情况下，我们需要添加一个回调函数来处理服务器的响应。PhoneDetailCtrl控制器通过在一个回调函数中设置mainImageUrl就是一个解释。
+
 -EOF-
