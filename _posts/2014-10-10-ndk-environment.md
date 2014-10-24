@@ -52,7 +52,7 @@ tags: [Android,NDK]
 
 由于NDK编译代码时必须要用到make和gcc，所以你必须先搭建一个linux环境，cygwin是一个在windows平台上运行的unix模拟环境,它对于学习unix/linux操作环境，或者从unix到windows的应用程序移植，非常有用。通过它，你就可以在不安装linux的情况下使用NDK来编译C、C++代码了。下面我们一步一步的安装cygwin吧。 
 
-首先，你得先跑到<http://www.cygwin.com/>下载setup.exe
+首先，先到<http://www.cygwin.com/>下载setup.exe
 
 1、 然后双击运行吧，运行后你将看到安装向导界面：
 
@@ -80,7 +80,7 @@ tags: [Android,NDK]
 
 根据自己的网络连接的实情情况进行选择，一般正常情况下，均选择第一种，也就是直接连接方式。然后再点击“下一步”，
 
-7、 这是选择要下载的站点，我用的是<http://mirrors.kernel.org/>，速度感觉还挺快，选择后点下一步.(有的网友说选择台湾的站点也比较快)
+7、 这是选择要下载的站点，我用的是163的mirror，速度感觉还挺快，选择后点下一步.
 
 8、 此时会下载加载安装包列表
 
