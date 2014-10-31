@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 初学CSS3
-category: CSS3
+category: CSS
 tags: [CSS3,CSS]
 ---
 
