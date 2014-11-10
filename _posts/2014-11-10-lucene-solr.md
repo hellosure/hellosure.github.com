@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 说说Lucene和Solr
-category: Lucene
-tags: [Lucene,Solr]
+title: 由Lucene说开去
+category: 搜索
+tags: [Lucene,Solr,Compass]
 ---
 
 ### Lucene和Solr有什么区别？
