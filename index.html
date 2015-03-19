@@ -14,17 +14,29 @@ title: HelloSure
     {% for tag in site.tags %}
     <li>
       {% if tag[1].size == 1 %}
-      <a style="color: #38B738; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 18px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elsif tag[1].size < 4 %}
-      <a style="color: #0066FF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 25px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elsif tag[1].size < 6 %}
-      <a style="color: #9900CC; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 32px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elsif tag[1].size < 8 %}
+      <a style="color: #842DCE; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 18px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 2 %}
+      <a style="color: #C38EC7; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 20px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 3 %}
+      <a style="color: #6698FF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 23px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 4 %}
+      <a style="color: #736AFF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 25px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 5 %}
+      <a style="color: #5E767E; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 28px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 6 %}
+      <a style="color: #8A4117; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 30px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 7 %}
+      <a style="color: #348781; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 32px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 8 %}
+      <a style="color: #41A317; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 36px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 9 %}
       <a style="color: #FF6666; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 40px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
-      {% elsif tag[1].size < 10 %}
-      <a style="color: #6666FF; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 48px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size == 10 %}
+      <a style="color: #827839; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 45px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      {% elsif tag[1].size < 12 %}
+      <a style="color: #F76541; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 48px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% else %}
-      <a style="color: #FFCC00; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 56px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
+      <a style="color: #E45E9D; font-family: Trebuchet MS, Helvetica, sans-serif; font-size: 56px" href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">{{ tag[0] }}</a>
       {% endif %}
     </li>
     {% endfor %}
