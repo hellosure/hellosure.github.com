@@ -1,8 +1,8 @@
 ---
 layout: post
-title: sqlite的使用
-category: Sqlite
-tags: [Sqlite,Lua,Android]
+title: SQLite的使用
+category: SQLite
+tags: [SQLite,Lua,Android]
 ---
 
 ### sqlite简介
