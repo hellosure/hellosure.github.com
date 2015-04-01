@@ -1,13 +1,13 @@
 ---
 layout: post
-title: Rails与其他对比
+title: Rails与Node.js/PHP/Python等对比
 category: Rails
-tags: [Rails,Ruby,Node.js,php,yii,python,Django]
+tags: [Rails,Ruby,Node.js,PHP,Yii,Python,Django]
 ---
 
 <http://loongsoul.lofter.com/post/108905_58bc0d>
 
-    这篇文章对除了nodejs之外的技术对比都还蛮靠谱，对rails很推崇。
+    这篇文章对除了nodejs之外的技术对比都还蛮靠谱，对rails很推崇。而python和php没必要了。
 
 首先，这不是一个比较贴，语言和框架能比较吗？
 
@@ -63,7 +63,7 @@ NodeJS是一款很有前途的Web框架，可惜就是晚生了几年，不然�
 
 <http://www.oschina.net/news/29468/why-we-moved-from-nodejs-to-ror#0-douban-1-45412-8281435cf7fd5566f1df466eda875057>
 
-    这篇文章对rails和nodejs的适用场景描述的非常到位。
+    这篇文章对rails和nodejs的适用场景描述的非常到位。rails和nodejs是最值得关注的两种后台技术。
 
 声明：这篇文章绝不是一篇讨论 NodeJS 和 Ruby on Rails 孰优孰略的檄文。它描述的只是我们做决策过程中的一些思考、决策背后的原因。两种框架都非常优秀，都出色的完成了它们的设计初衷，这也是为什么我们部分的模块仍然运行在NodeJS上的原因。
 
