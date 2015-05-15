@@ -97,7 +97,7 @@ JB :
   #       idsite : '1'                   # the id of the site on Piwik
 
   analytics :
-    provider : google 
+    provider : baidu 
 
   # Settings for sharing helper. 
   # Sharing is for things like tweet, plusone, like, reddit buttons etc.
