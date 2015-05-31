@@ -43,15 +43,6 @@ UI的主线程中更新画面 可能会引发问题，比如你更新画面的�
 
 <% highlight java %>
 
-import android.app.Activity;  
-import android.content.Context;  
-import android.graphics.Canvas;  
-import android.graphics.Color;  
-import android.graphics.Paint;  
-import android.os.Bundle;  
-import android.view.SurfaceHolder;  
-import android.view.SurfaceView;  
-  
 public class TestSurfaceView extends Activity {  
     /** Called when the activity is first created. */  
     @Override  
@@ -59,7 +50,12 @@ public class TestSurfaceView extends Activity {
         super.onCreate(savedInstanceState);  
         setContentView(new MyView(this));  
     }  
-      
+ }
+ 
+<% endhighlight %>
+
+<% highlight java %>
+
     class MyView extends SurfaceView implements SurfaceHolder.Callback,Runnable{  
         SurfaceHolder holder=null;  
         Paint paint;  
@@ -73,7 +69,7 @@ public class TestSurfaceView extends Activity {
               
             this.setFocusable(true);  
         }  
-  
+        
         @Override  
         public void surfaceChanged(SurfaceHolder holder, int format, int width,  
                 int height) {  
