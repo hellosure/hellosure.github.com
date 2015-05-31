@@ -41,7 +41,7 @@ UI的主线程中更新画面 可能会引发问题，比如你更新画面的�
 
 使用的SurfaceView的时候，一般情况下要对其进行创建，销毁，改变时的情况进行监视，这就要用到 `SurfaceHolder.Callback`. 
 
-<% highlight java %>
+{% highlight java %}
 
     public class TestSurfaceView extends Activity {  
         @Override  
@@ -51,9 +51,9 @@ UI的主线程中更新画面 可能会引发问题，比如你更新画面的�
         }  
      }
  
-<% endhighlight %>
+{% endhighlight %}
 
-<% highlight java %>
+{% highlight java %}
 
     class MyView extends SurfaceView implements SurfaceHolder.Callback,Runnable{  
         SurfaceHolder holder=null;  
@@ -135,6 +135,6 @@ UI的主线程中更新画面 可能会引发问题，比如你更新画面的�
     }  
       
 
-<% endhighlight %>
+{% endhighlight %}
 
 -EOF-
