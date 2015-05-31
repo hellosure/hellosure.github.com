@@ -43,6 +43,15 @@ UI的主线程中更新画面 可能会引发问题，比如你更新画面的�
 
 <% highlight java %>
 
+import android.app.Activity;  
+import android.content.Context;  
+import android.graphics.Canvas;  
+import android.graphics.Color;  
+import android.graphics.Paint;  
+import android.os.Bundle;  
+import android.view.SurfaceHolder;  
+import android.view.SurfaceView;  
+  
 public class TestSurfaceView extends Activity {  
     /** Called when the activity is first created. */  
     @Override  
@@ -50,7 +59,7 @@ public class TestSurfaceView extends Activity {
         super.onCreate(savedInstanceState);  
         setContentView(new MyView(this));  
     }  
-    
+      
     class MyView extends SurfaceView implements SurfaceHolder.Callback,Runnable{  
         SurfaceHolder holder=null;  
         Paint paint;  
@@ -63,9 +72,8 @@ public class TestSurfaceView extends Activity {
             paint.setColor(Color.RED);  
               
             this.setFocusable(true);  
-        } 
-
-        /* 在surface的大小发生改变时激发 */
+        }  
+  
         @Override  
         public void surfaceChanged(SurfaceHolder holder, int format, int width,  
                 int height) {  
@@ -73,7 +81,6 @@ public class TestSurfaceView extends Activity {
               
         }  
   
-       /* 在创建时激发，一般在这里调用画图的线程 */
         @Override  
         public void surfaceCreated(SurfaceHolder holder) {  
             // TODO Auto-generated method stub  
@@ -81,8 +88,6 @@ public class TestSurfaceView extends Activity {
             t.start();  
         }  
   
-
-      /* 销毁时激发，一般在这里将画图的线程停止、释放 */
         @Override  
         public void surfaceDestroyed(SurfaceHolder holder) {  
             // TODO Auto-generated method stub  
@@ -115,7 +120,6 @@ public class TestSurfaceView extends Activity {
         public void run() {  
             // TODO Auto-generated method stub  
             while (isRunning) {  
-//              onDraw(null);  
                 paint(paint);  
                 move();  
                 try {  
