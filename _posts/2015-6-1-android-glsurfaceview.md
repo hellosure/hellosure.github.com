@@ -43,14 +43,13 @@ UI的主线程中更新画面 可能会引发问题，比如你更新画面的�
 
 <% highlight java %>
 
-public class TestSurfaceView extends Activity {  
-    /** Called when the activity is first created. */  
-    @Override  
-    public void onCreate(Bundle savedInstanceState) {  
-        super.onCreate(savedInstanceState);  
-        setContentView(new MyView(this));  
-    }  
- }
+    public class TestSurfaceView extends Activity {  
+        @Override  
+        public void onCreate(Bundle savedInstanceState) {  
+            super.onCreate(savedInstanceState);  
+            setContentView(new MyView(this));  
+        }  
+     }
  
 <% endhighlight %>
 
@@ -135,7 +134,6 @@ public class TestSurfaceView extends Activity {
         }  
     }  
       
-}
 
 <% endhighlight %>
 
