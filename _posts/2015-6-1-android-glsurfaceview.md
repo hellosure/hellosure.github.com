@@ -50,7 +50,7 @@ public class TestSurfaceView extends Activity {
         super.onCreate(savedInstanceState);  
         setContentView(new MyView(this));  
     }  
-      
+    
     class MyView extends SurfaceView implements SurfaceHolder.Callback,Runnable{  
         SurfaceHolder holder=null;  
         Paint paint;  
