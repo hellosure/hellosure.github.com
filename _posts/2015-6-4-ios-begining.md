@@ -1,4 +1,11 @@
-iOS开发60分钟入门
+---
+layout: post
+title: IOS开发60分钟入门
+category: IOS
+tags: [IOS]
+---
+
+IOS开发60分钟入门
 ===============
 本文面向已有其它语言（如Java，C，PHP，Javascript）编程经验的iOS开发初学者，初衷在于让我的同事一小时内了解如何开始开发iOS App，学习目标包括：
 
