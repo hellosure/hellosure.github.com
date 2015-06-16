@@ -123,4 +123,687 @@ handler.post(myRunnable,time);
 
 案例看：http://shaobin0604.javaeye.com/blog/515820
 
+## Android中有关Handler的使用
+
+一个Handler允许你发送和处理消息（Message）以及与一个线程的消息队列相关的Runnable对象。每个Handler实例都和单个线程以及该线程的消息队列有关。当你创建了一个新Handler，它就会和创建它的线程/消息队列绑定，在那以后，它就会传递消息以及runnable对象给消息队列，然后执行它们。
+ 
+       需要使用Handler有两大主要的原因：
+       （1）在将来的某个时间点调度处理消息和runnable对象；
+       （2）将需要执行的操作放到其他线程之中，而不是自己的；
+ 
+      调度处理消息是通过调用post(Runnable), postAtTime(Runnable, long), postDelayed(Runnable, long), sendEmptyMessage(int), sendMessage(Message), sendMessageAtTime(Message, long)和sendMessageDelayed(Message, long)等方法完成的。其中的post版本的方法可以让你将Runnable对象放进消息队列；sendMessage版本的方法可以让你将一个包含有bundle对象的消息对象放进消息队列，然后交由handleMessage(Message)方法处理。（这个需要你复写Handler的handleMessage方法）
+      
+andler在实际开发中是很常用的，主要是用来接收子线程发送的数据，然后主线程结合此数据来更新界面UI。
+      Android应用程序启动时，他会开启一个主线程（也就是UI线程），管理界面中的UI控件，进行事件派发，比如说：点击一个按钮，Android会分发事件到Button上从而来响应你的操作。但是当你需要执行一个比较耗时的操作的话，例如：进行IO操作，网络通信等等，若是执行时间超过5s，那么Android会弹出一个“经典”的ANR无响应对话框，然后提示按“Force quit”或是“Wait”。解决此类问题的方法就是：我们把一些耗时的操作放到子线程中去执行。但因为子线程涉及到UI更新，而Android主线程是线程不安全的，所以更新UI的操作只能放在主线程中执行，若是放在子线程中执行的话很会出问题。所以这时就需要一种机制：主线程可以发送“命令/任务”给子线程执行，然后子线程反馈执行结果；
+ 
+！你必需要知道的：
+      若在主线程中实例化一个Handler对象，例如：
+      Handler mHandler = new Handler();
+      此时它并没有新派生一个线程来执行此Handler，而是将此Handler附加在主线程上，故此时若你在Handler中执行耗时操作的话，还是会弹出ANR对话框！
+ 
+### post版本的Handler使用
+
+{% highlight java %}
+
+package com.dxyh.test;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+public class MainActivity extends Activity
+			    implements OnClickListener {
+	private final static String TAG = "HandlerTest";
+	private final static int DELAY_TIME = 1000;
+	
+	private Button btnStart;
+	private Button btnStop;
+	
+	Context mContext = null;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        
+        mContext = this;
+
+        Log.i(TAG, "Main thread id = " + 
+        		Thread.currentThread().getId());
+        
+        btnStart = (Button) findViewById(R.id.btn_start);
+        btnStart.setOnClickListener(this);
+        btnStop = (Button) findViewById(R.id.btn_stop);
+        btnStop.setOnClickListener(this);
+    }
+    
+    @Override
+    public void onClick(View view) {
+    	switch (view.getId()) {
+    	case R.id.btn_start:
+    		mHandler.postDelayed(workRunnable, DELAY_TIME);
+    		break;
+    	case R.id.btn_stop:
+    		mHandler.removeCallbacks(workRunnable);
+    		break;
+    	}
+    }
+    
+    Runnable workRunnable = new Runnable() {
+    	int counter = 0;
+    	
+    	public void run() {
+    		if (counter++ < 1) {
+	    		Log.i(TAG, "workRunnable thread id = " + 
+	    				Thread.currentThread().getId());
+	    		mHandler.postDelayed(workRunnable, DELAY_TIME);
+    		}
+    	}
+    };
+    
+    Handler mHandler = new Handler();
+}
+
+{% endhighlight %}
+
+![1](http://hi.csdn.net/attachment/201105/5/0_1304610293515S.gif "1")
+
+说明：发现thread id是相同的，这就说明：默认情况下创建的Handler会绑定到主线程上，你不能做太耗时的操作。
+
+### sendMessage版本的Handler的使用
+
+这里介绍几种模型:
+
+#### 默认的Handler（消息处理队列挂在主线程上）
+
+{% highlight java %}
+
+package com.dxyh.test;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+public class MainActivity extends Activity
+				  implements OnClickListener {
+	private final static String TAG = "HandlerTest";
+	
+	private final static int TASK_BEGIN	= 1;
+	private final static int TASK_1	= 2;
+	private final static int TASK_2	= 3;
+	private final static int TASK_END	= 4;
+	
+	private Button btnStart = null;
+	private Button btnStop = null;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        
+        btnStart = (Button) findViewById(R.id.btn_start);
+        btnStart.setOnClickListener(this);
+        btnStop = (Button) findViewById(R.id.btn_stop);
+        btnStop.setOnClickListener(this);
+        
+        Log.i(TAG, "[M_TID:" + Thread.currentThread().getId() + "]");
+    }
+    
+    Handler mHandler = new Handler() {
+    	// 注意：在各个case后面不能做太耗时的操作，否则出现ANR对话框
+    	@Override
+    	public void handleMessage(Message msg) {
+    		switch (msg.what) {
+    		case TASK_BEGIN:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_BEGIN");
+    			break;
+    			
+    		case TASK_1:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_1");
+    			break;
+    			
+    		case TASK_2:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_2");
+    			break;
+    			
+    		case TASK_END:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_END");
+    			finish();
+    			break;
+    		}
+    		super.handleMessage(msg);
+    	}
+    };
+    
+    public void onClick(View view) {
+    	switch (view.getId()) {
+    	case R.id.btn_start:
+    		// 启动任务（消息只有标识，立即投递）
+    		mHandler.sendEmptyMessage(TASK_BEGIN);
+    		Log.i(TAG, "Send TASK_BEGIN to handler.");
+    		
+    		// 开始任务1（在mHandler的消息队列中获取一个Message对象，避免重复构造）
+    		Message msg1 = mHandler.obtainMessage(TASK_1);
+    		msg1.obj = "This is task1";
+    		mHandler.sendMessage(msg1);
+    		Log.i(TAG, "Send TASK_1 to handler.");
+    		
+    		// 开启任务2（和上面类似）
+    		Message msg2 = Message.obtain();
+    		msg2.arg1 = 10;
+    		msg2.arg2 = 20;
+    		msg2.what = TASK_2;
+    		mHandler.sendMessage(msg2);
+    		Log.i(TAG, "Send TASK_2 to handler.");
+    		break;
+    		
+    	case R.id.btn_stop:
+    		// 结束任务（空消息体，延时2s投递）
+    		mHandler.sendEmptyMessageDelayed(TASK_END, 2000);
+    		Log.i(TAG, "Send TASK_END to handler.");
+    		break;
+    	}
+}
+}
+
+{% endhighlight %}
+
+![2](http://hi.csdn.net/attachment/201105/6/0_1304691667u3q3.gif "2")
+
+#### 消息队列仍绑定在主线程上，但在子线程中发送消息
+
+{% highlight java %}
+
+package com.dxyh.test;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+public class MainActivity extends Activity {
+	private final static String TAG = "HandlerTest";
+	
+	private final static int TASK_BEGIN	= 1;
+	private final static int TASK_1	= 2;
+	private final static int TASK_2	= 3;
+	private final static int TASK_END	= 4;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        
+        Log.i(TAG, "[M_TID:" + Thread.currentThread().getId() + "]" +
+        		"This is in main thread.");
+        
+        workThread.start();
+    }
+    
+    Handler mHandler = new Handler() {
+    	// 注意：在各个case后面不能做太耗时的操作，否则出现ANR对话框
+    	@Override
+    	public void handleMessage(Message msg) {
+    		switch (msg.what) {
+    		case TASK_BEGIN:
+    			Log.i(TAG, "[H_TID:" +
+				Thread.currentThread().getId() + "] Get TASK_BEGIN");
+    			break;
+    			
+    		case TASK_1:
+    			Log.i(TAG, "[H_TID:" +
+				Thread.currentThread().getId() + "] Get TASK_1");
+    			break;
+    			
+    		case TASK_2:
+    			Log.i(TAG, "[H_TID:" +
+				Thread.currentThread().getId() + "] Get TASK_2");
+    			break;
+    			
+    		case TASK_END:
+    			Log.i(TAG, "[H_TID:" +
+				Thread.currentThread().getId() + "] Get TASK_END");
+    			finish();
+    			break;
+    		}
+    		super.handleMessage(msg);
+    	}
+    };
+    
+    Thread workThread = new Thread() {
+    	// 你可以在run方法内做任何耗时的操作，然后将结果以消息形式投递到主线程的消息队列中
+    	@Override
+    	public void run() {
+    		// 启动任务（消息只有标识，立即投递）
+    		mHandler.sendEmptyMessage(TASK_BEGIN);
+    		Log.i(TAG, "[S_TID:" + Thread.currentThread().getId() + "]" +
+    				"Send TASK_START to handler.");
+    		
+    		// 开始任务1（在mHandler的消息队列中获取一个Message对象，避免重复构造）
+    		Message msg1 = mHandler.obtainMessage(TASK_1);
+    		msg1.obj = "This is task1";
+    		mHandler.sendMessage(msg1);
+    		Log.i(TAG, "[S_TID:" + Thread.currentThread().getId() + "]" +
+    				"Send TASK_1 to handler.");
+    		
+    		// 开启任务2（和上面类似）
+    		Message msg2 = Message.obtain();
+    		msg2.arg1 = 10;
+    		msg2.arg2 = 20;
+    		msg2.what = TASK_2;
+    		mHandler.sendMessage(msg2);
+    		Log.i(TAG, "[S_TID:" + Thread.currentThread().getId() + "]" +
+    				"Send TASK_2 to handler.");
+    		
+    		// 结束任务（空消息体，延时2s投递）
+    		mHandler.sendEmptyMessageDelayed(TASK_END, 2000);
+    		Log.i(TAG, "[S_TID:" + Thread.currentThread().getId() + "]" +
+    				"Send TASK_END to handler.");
+    	}
+    };
+}
+
+{% endhighlight %}
+
+![3](http://hi.csdn.net/attachment/201105/6/0_1304692156X4XD.gif "3")
+
+#### 将消息队列绑定到子线程上，主线程只管通过Handler往子线程的消息队列中投递消息即可
+
+{% highlight java %}
+
+package com.dxyh.test;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+
+public class MainActivity extends Activity {
+	private final static String TAG = "HandlerTest";
+	
+	private final static int TASK_BEGIN	= 1;
+	private final static int TASK_1	= 2;
+	private final static int TASK_2	= 3;
+	private final static int TASK_END	= 4;
+	
+	private MyHandler mHandler = null;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+
+        Log.i(TAG, "[M_TID:" + Thread.currentThread().getId() + "]" +
+        		"This is in main thread.");
+        
+        HandlerThread myLooperThread = new HandlerThread("my looper thread");
+        myLooperThread.start();
+        
+        Looper looper = myLooperThread.getLooper();
+        mHandler = new MyHandler(looper);
+        
+        // 启动任务（消息只有标识，立即投递）
+		mHandler.sendEmptyMessage(TASK_BEGIN);
+		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_START to handler.");
+		
+		// 开始任务1（在mHandler的消息队列中获取一个Message对象，避免重复构造）
+		Message msg1 = mHandler.obtainMessage(TASK_1);
+		msg1.obj = "This is task1";
+		mHandler.sendMessage(msg1);
+		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_1 to handler.");
+		
+		// 开启任务2（和上面类似）
+		Message msg2 = Message.obtain();
+		msg2.arg1 = 10;
+		msg2.arg2 = 20;
+		msg2.what = TASK_2;
+		mHandler.sendMessage(msg2);
+		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_2 to handler.");
+		
+		// 结束任务（空消息体，延时2s投递）
+		mHandler.sendEmptyMessageDelayed(TASK_END, 2000);
+		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_END to handler.");
+    }
+    
+    class MyHandler extends Handler {
+    	public MyHandler(Looper looper) {
+    		super(looper);
+    	}
+    	
+    	// 现在在每个case之后，你可以做任何耗时的操作了
+    	@Override
+    	public void handleMessage(Message msg) {
+    		switch (msg.what) {
+    		case TASK_BEGIN:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_BEGIN");
+    			break;
+    			
+    		case TASK_1:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_1");
+    			break;
+    			
+    		case TASK_2:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_2");
+    			break;
+    			
+    		case TASK_END:
+    			Log.i(TAG, "[H_TID:" +
+    				Thread.currentThread().getId() + "] Get TASK_END");
+    			finish();
+    			break;
+    		}
+    		super.handleMessage(msg);
+    	}
+    }
+}
+
+{% endhighlight %}
+
+![3](http://hi.csdn.net/attachment/201105/6/0_1304692161OYTN.gif "3")
+
+#### 自己创建新的线程，然后在新线程中创建Looper，主线程调用子线程中的发消息方法，将消息发给子线程的消息队列
+
+{% highlight java %}
+
+package com.dxyh.test;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+
+public class MainActivity extends Activity {
+	private final static String TAG = "HandlerTest";
+	
+	private final static int TASK_BEGIN	= 1;
+	private final static int TASK_1	= 2;
+	private final static int TASK_2	= 3;
+	private final static int TASK_END	= 4;
+	
+	private Handler workHandler = null;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+
+        Log.i(TAG, "[M_TID:" + Thread.currentThread().getId() + "]" +
+        		"This is in main thread.");
+        
+        LooperThread testThread = new LooperThread();
+        testThread.start();
+        
+        // 注意，这里需要等待一下，防止出现空指针异常
+        while (null == workHandler) {
+        }
+        
+        testThread.sendMessageTodoYourWork();
+    }
+    
+    class LooperThread extends Thread {
+    	@Override
+    	public void run() {
+    		Looper.prepare();
+    		
+    		workHandler = new Handler() {
+    			// 现在在每个case之后，你可以做任何耗时的操作了
+    	    	@Override
+    	    	public void handleMessage(Message msg) {
+    	    		switch (msg.what) {
+    	    		case TASK_BEGIN:
+    	    			Log.i(TAG, "[H_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_BEGIN");
+    	    			break;
+    	    			
+    	    		case TASK_1:
+    	    			Log.i(TAG, "[H_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_1");
+    	    			break;
+    	    			
+    	    		case TASK_2:
+    	    			Log.i(TAG, "[H_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_2");
+    	    			break;
+    	    			
+    	    		case TASK_END:
+    	    			Log.i(TAG, "[H_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_END");
+    	    			Looper.myLooper().quit();
+    	    			finish();
+    	    			break;
+    	    		}
+    	    		super.handleMessage(msg);
+    	    	}
+    		};
+    		
+    		Looper.loop();
+    	}
+    	
+    	public void sendMessageTodoYourWork() {
+    		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_START to handler.");
+    		// 启动任务（消息只有标识，立即投递）
+    		workHandler.sendEmptyMessage(TASK_BEGIN);
+
+    		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_1 to handler.");
+    		// 开始任务1（在workHandler的消息队列中获取一个Message对象，避免重复构造）
+    		Message msg1 = workHandler.obtainMessage(TASK_1);
+    		msg1.obj = "This is task1";
+    		workHandler.sendMessage(msg1);
+    		
+    		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_2 to handler.");    		
+    		// 开启任务2（和上面类似）
+    		Message msg2 = Message.obtain();
+    		msg2.arg1 = 10;
+    		msg2.arg2 = 20;
+    		msg2.what = TASK_2;
+    		workHandler.sendMessage(msg2);
+
+    		Log.i(TAG, "[S_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_END to handler.");
+    		// 结束任务（空消息体，延时2s投递）
+    		workHandler.sendEmptyMessageDelayed(TASK_END, 2000);
+    	}
+    }
+}
+
+{% endhighlight %}
+
+![4](http://hi.csdn.net/attachment/201105/6/0_1304692714WG0R.gif "4")
+
+#### 主/子线程均有一个消息队列，然后相互传递消息（这种方式是最灵活的，双向传递，也不复杂）
+
+{% highlight java %}
+
+package com.dxyh.test;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+
+public class MainActivity extends Activity {
+	private final static String TAG = "HandlerTest";
+	
+	private final static int TASK_BEGIN		= 1;
+	private final static int TASK_1		= 2;
+	private final static int TASK_2		= 3;
+	private final static int TASK_END		= 4;
+	
+	private final static int TASK_BEGIN_OVER	= 11;
+	private final static int TASK_1_OVER	= 12;
+	private final static int TASK_2_OVER	= 13;
+	private final static int TASK_END_OVER	= 14;
+	
+	private Handler workHandler = null;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+
+        Log.i(TAG, "[M_TID:" + Thread.currentThread().getId() + "]" +
+        		"This is in main thread.");
+        
+        LooperThread testThread = new LooperThread();
+        testThread.start();
+        
+        // 注意，这里需要等待一下，防止出现空指针异常
+        while (null == workHandler) {
+        }
+        
+        testThread.sendMessageTodoYourWork();
+    }
+  
+    Handler mainHandler = new Handler () {
+    	// 在每个case之后，不能做耗时的操作
+    	@Override
+    	public void handleMessage(Message msg) {
+    		switch (msg.what) {
+    		case TASK_BEGIN_OVER:
+    			Log.i(TAG, "[MH_TID:" +
+    				Thread.currentThread().getId() + "] TASK_BEGIN_OVER");
+    			break;
+    			
+    		case TASK_1_OVER:
+    			Log.i(TAG, "[MH_TID:" +
+    				Thread.currentThread().getId() + "] TASK_1_OVER");
+    			break;
+    			
+    		case TASK_2_OVER:
+    			Log.i(TAG, "[MH_TID:" +
+    				Thread.currentThread().getId() + "] TASK_2_OVER");
+    			break;
+    			
+    		case TASK_END_OVER:
+    			Log.i(TAG, "[MH_TID:" +
+    				Thread.currentThread().getId() + "] TASK_END_OVER");
+    			finish();
+    			break;
+    		}
+    		super.handleMessage(msg);
+    	}
+    };
+    
+    class LooperThread extends Thread {
+    	@Override
+    	public void run() {
+    		Looper.prepare();
+    		
+    		workHandler = new Handler() {
+    			// 现在在每个case之后，你可以做任何耗时的操作了
+    	    	@Override
+    	    	public void handleMessage(Message msg) {
+    	    		switch (msg.what) {
+    	    		case TASK_BEGIN:
+    	    			Log.i(TAG, "[ZH_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_BEGIN");
+    	    			// 做完之后报告信息给主线程
+    	    			mainHandler.sendEmptyMessage(TASK_BEGIN_OVER);
+    	    			break;
+    	    			
+    	    		case TASK_1:
+    	    			Log.i(TAG, "[ZH_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_1");
+    	    			// 做完之后报告信息给主线程
+    	    			mainHandler.sendEmptyMessage(TASK_1_OVER);
+    	    			break;
+    	    			
+    	    		case TASK_2:
+    	    			Log.i(TAG, "[ZH_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_2");
+    	    			// 做完之后报告信息给主线程
+    	    			mainHandler.sendEmptyMessage(TASK_2_OVER);
+    	    			break;
+    	    			
+    	    		case TASK_END:
+    	    			Log.i(TAG, "[ZH_TID:" +
+    	    			   Thread.currentThread().getId() + "] Get TASK_END");
+    	    			Looper.myLooper().quit();
+    	    			// 做完之后报告信息给主线程
+    	    			mainHandler.sendEmptyMessage(TASK_END_OVER);
+    	    			Looper.myLooper().quit();
+    	    			break;
+    	    		}
+    	    		super.handleMessage(msg);
+    	    	}
+    		};
+    		
+    		Looper.loop();
+    	}
+    	
+    	public void sendMessageTodoYourWork() {
+    		Log.i(TAG, "[ZS_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_START to handler.");
+    		// 启动任务（消息只有标识，立即投递）
+    		workHandler.sendEmptyMessage(TASK_BEGIN);
+
+    		Log.i(TAG, "[ZS_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_1 to handler.");
+    		// 开始任务1（在workHandler的消息队列中获取一个Message对象，避免重复构造）
+    		Message msg1 = workHandler.obtainMessage(TASK_1);
+    		msg1.obj = "This is task1";
+    		workHandler.sendMessage(msg1);
+    		
+    		Log.i(TAG, "[ZS_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_2 to handler.");    		
+    		// 开启任务2（和上面类似）
+    		Message msg2 = Message.obtain();
+    		msg2.arg1 = 10;
+    		msg2.arg2 = 20;
+    		msg2.what = TASK_2;
+    		workHandler.sendMessage(msg2);
+
+    		Log.i(TAG, "[ZS_ID:" + Thread.currentThread().getId() + "]" +
+				"Send TASK_END to handler.");
+    		// 结束任务（空消息体，延时2s投递）
+    		workHandler.sendEmptyMessageDelayed(TASK_END, 2000);
+    	}
+    }
+}
+
+{% endhighlight %}
+
+![5](http://hi.csdn.net/attachment/201105/6/0_1304692718t2rw.gif "5")
+
+小结：Handler在Android中是很常用的，或是用来更新UI，或是派发任务给子线程去执行，也可以用来产生超时效果，比如用sendMessageDelayed(TASK_TIMEOUT, OUT_TIME)方法。
+
+
 -EOF-
