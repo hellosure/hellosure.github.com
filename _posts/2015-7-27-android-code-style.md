@@ -14,9 +14,13 @@ tags: [Android,代码风格]
 
 ### 布局文件与资源
 
-- layout xml中的高低版本兼容问题：（1）对于高低版本有不同attribute来实现相同功能的情况，比如right/end：都写一遍。（2）对于某种attribute只在高版本中能实现：如果不影响低版本布局，可以不分xml，在代码中实现功能。如果影响低版本布局，可以分版本写xml。
+- layout xml中的高低版本兼容问题：
 
-***
+1. 对于高低版本有不同attribute来实现相同功能的情况，比如right/end：都写一遍。
+
+2. 对于某种attribute只在高版本中能实现：如果不影响低版本布局，可以不分xml，在代码中实现功能。如果影响低版本布局，可以分版本写xml。
+
+----
 
 - png和9.png文件不能重名
 
@@ -39,5 +43,7 @@ tags: [Android,代码风格]
 ***
 
 - 避免layout xml中嵌套太多，比如RelativeLayout的子view都确定height来撑起其height，而不要用一个多余的LinearLayout来撑起其height。
+
+***
 
 -EOF-
