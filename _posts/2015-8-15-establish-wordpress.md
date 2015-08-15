@@ -42,7 +42,7 @@ tags: [WordPress,Ubuntu]
 
 
     mysql> CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-    mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON wordpress.* TO 'hellosure'@'localhost' IDENTIFIED BY 'hellosure';
+    mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON wordpress.* TO '用户名'@'localhost' IDENTIFIED BY '密码';
 
 5. 安装wordpress
 
