@@ -1,13 +1,11 @@
 ---
 layout: post
-title: 如何搭建一个WordPress网站
+title: 如何快速搭建一个WordPress网站
 category: WordPress
 tags: [WordPress,Ubuntu]
 ---
 
 1. ssh连接虚拟主机
-
-    $ sudo ssh -i PEM文件 用户名@HOST地址
 
 2. 安装Lamp套装的准备工作
 
