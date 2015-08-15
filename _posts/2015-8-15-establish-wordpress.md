@@ -9,6 +9,7 @@ tags: [WordPress,Ubuntu]
 
 2. 安装Lamp套装的准备工作
 
+
     $ sudo apt-get install tasksel
 
 报错locale: Cannot set LC_CTYPE to default locale: No such file or directory 
@@ -18,8 +19,11 @@ tags: [WordPress,Ubuntu]
 
     $ sudo vim /etc/default/locale
 
-添加LC_ALL="en_US.UTF-8"
-LANG="en_US.UTF-8"
+添加：
+
+    LC_ALL="en_US.UTF-8"
+    LANG="en_US.UTF-8"
+    LANGUAGE="en_US.UTF-8"
 
 （2）第二步
 
@@ -27,12 +31,15 @@ LANG="en_US.UTF-8"
 
 3. 接着开始安装Lamp
 
+
     $ sudo apt-get update
     $ sudo tasksel install lamp-server 
 
 4. mysql创建数据库
 
+
     $mysql -u root -p
+
 
     mysql> CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
     mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON wordpress.* TO 'hellosure'@'localhost' IDENTIFIED BY 'hellosure';
